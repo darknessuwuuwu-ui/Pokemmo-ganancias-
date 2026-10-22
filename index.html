@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#071c4f">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Ganancias">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Mis Ganancias</title>
 <style>
   :root{
@@ -49,7 +56,7 @@
   body{
     margin:0;color:var(--text);min-height:100vh;
     font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-    padding:22px 16px calc(120px + env(safe-area-inset-bottom));
+    padding:calc(22px + env(safe-area-inset-top)) 16px calc(120px + env(safe-area-inset-bottom));
   }
   body::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--grad)}
   button{font-family:inherit}
@@ -434,7 +441,7 @@
     var m = 0, it = 0, sp = 0;
     rows.forEach(function(r){ m += r.money; it += r.items; sp += r.spent; });
     byId('grandMoney').textContent = fmtMoney(m);
-    byId('grandSub').textContent = fmtNum(it) + plural(it, ' objeto vendido', ' objetos vendidos') +
+    byId('grandSub').textContent = 'Cantidad vendida: ' + fmtNum(it) +
       ' · ' + rows.length + plural(rows.length, ' día', ' días') + (sp > 0 ? ' · gastos ' + fmtMoney(sp) : '');
   }
 
@@ -643,7 +650,7 @@
     g1.appendChild(l1); g1.appendChild(i1);
 
     var g2 = document.createElement('div');
-    var l2 = document.createElement('label'); l2.textContent = 'Objetos vendidos';
+    var l2 = document.createElement('label'); l2.textContent = 'Cantidad vendida';
     var i2 = document.createElement('input'); i2.type = 'number'; i2.inputMode = 'numeric';
     i2.min = '0'; i2.step = '1'; i2.placeholder = '0';
     i2.value = (e.items === '' || e.items == null) ? '' : e.items;
@@ -859,6 +866,12 @@
 
   renderAll();
 })();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
 </script>
 </body>
 </html>
