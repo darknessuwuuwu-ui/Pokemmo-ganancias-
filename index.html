@@ -176,6 +176,11 @@
   .sw i{width:34px;height:34px;border-radius:50%;border:1px solid rgba(128,128,128,.45)}
   .sw.on{border-color:var(--blue-l);color:var(--text)}
   .day-exp{font-size:.8rem;font-weight:600;color:var(--downx);margin-top:2px}
+  @keyframes slL{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
+  @keyframes slR{from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:none}}
+  .sl{animation:slL .22s ease-out}
+  .sr{animation:slR .22s ease-out}
+  @media (prefers-reduced-motion:reduce){.sl,.sr{animation:none}}
 </style>
 </head>
 <body>
@@ -863,6 +868,28 @@
     byId(id).addEventListener('keydown', function(ev){ if(ev.key === 'Enter'){ ev.preventDefault(); addExpense(); } });
   });
   byId('expDate').addEventListener('change', function(){ if(this.value) openDay(this.value, 'expenses'); });
+
+  /* ---------- Deslizar para cambiar de opción ---------- */
+  var ORDER = ['today', 'history', 'expenses'];
+  var SECS = {today: $viewToday, history: $viewHist, expenses: $viewExp};
+  var sx = 0, sy = 0, st0 = 0, swipe = false;
+  document.addEventListener('touchstart', function(e){
+    var t = e.touches[0];
+    swipe = e.touches.length === 1 && !(e.target.closest && e.target.closest('.chart-wrap, input, .modal'));
+    sx = t.clientX; sy = t.clientY; st0 = Date.now();
+  }, {passive: true});
+  document.addEventListener('touchend', function(e){
+    if(!swipe) return;
+    swipe = false;
+    var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+    if(Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5 || Date.now() - st0 > 700) return;
+    var i = ORDER.indexOf(view) + (dx < 0 ? 1 : -1);
+    if(i < 0 || i >= ORDER.length) return;
+    showView(ORDER[i]);
+    var el = SECS[ORDER[i]];
+    el.classList.remove('sl', 'sr'); void el.offsetWidth;
+    el.classList.add(dx < 0 ? 'sl' : 'sr');
+  }, {passive: true});
 
   renderAll();
 })();
