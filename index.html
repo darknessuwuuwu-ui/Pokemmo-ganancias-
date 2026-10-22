@@ -167,7 +167,7 @@
   .fab svg{width:28px;height:28px}
   .btn-clear{display:block;width:100%;margin-top:14px;padding:13px;border-radius:14px;border:1px solid var(--downx);background:none;color:var(--downx);font-weight:600;font-size:.9rem;cursor:pointer}
   .modal{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.55)}
-  .sheet{width:100%;max-width:380px;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+  .sheet{width:100%;max-width:380px;max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px);overflow-y:auto;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 20px 50px rgba(0,0,0,.4)}
   .sheet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
   .x{border:0;background:var(--chip);color:var(--chipx);width:34px;height:34px;border-radius:50%;font-size:1.3rem;line-height:1;cursor:pointer}
   .set-name{font-size:.95rem;font-weight:700;margin-bottom:10px}
@@ -181,6 +181,22 @@
   .sl{animation:slL .22s ease-out}
   .sr{animation:slR .22s ease-out}
   @media (prefers-reduced-motion:reduce){.sl,.sr{animation:none}}
+  .quick{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .qchip{border:0;background:var(--chip);color:var(--chipx);font-size:.85rem;font-weight:600;padding:10px 14px;border-radius:999px;cursor:pointer}
+  .qchip:active{background:var(--surface2)}
+  .qchip small{opacity:.8;font-weight:600;margin-left:4px}
+  .qbtns{display:flex;gap:6px;align-items:center;justify-content:flex-end}
+  .qbtns .chip{padding:7px 12px;font-size:.75rem}
+  #qList .ent{cursor:default}
+  .toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:50;background:var(--text);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:.85rem;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.35);max-width:90vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .panel[hidden]{display:none}
+  .set-item{display:flex;align-items:center;gap:10px;width:100%;background:var(--surface);color:var(--text);border:0;border-radius:14px;padding:15px 14px;margin-bottom:8px;font-size:.95rem;font-weight:600;text-align:left;cursor:pointer;box-shadow:var(--shadow)}
+  .set-item span{flex:1}
+  .set-item small{color:var(--muted);font-size:.75rem;font-weight:600}
+  .set-item b{color:var(--muted);font-size:1.2rem;font-weight:400;line-height:1}
+  .set-item:active{background:var(--surface2)}
+  a.lnk{color:inherit;text-decoration:none;display:block}
+  #lList .ent{cursor:default}
 </style>
 </head>
 <body>
@@ -231,6 +247,11 @@
         <div class="day-exp" id="dayExp" hidden></div>
         <span class="pill flat" id="dayTrend" hidden></span>
       </div>
+    </div>
+
+    <div id="quickWrap" hidden>
+      <div class="label" style="margin-bottom:8px">Opción rápida</div>
+      <div class="quick" id="quick"></div>
     </div>
 
     <div id="list"></div>
@@ -301,10 +322,18 @@
 <div class="modal" id="settings" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="setTitle">
     <div class="sheet-head">
+      <button class="x" id="setBack" type="button" aria-label="Volver" hidden>‹</button>
       <h2 id="setTitle">Configuración</h2>
       <button class="x" id="setClose" type="button" aria-label="Cerrar">×</button>
     </div>
-    <div class="set-name">Tema</div>
+
+    <div class="panel" id="pnlMain">
+      <button class="set-item" data-go="theme" type="button"><span>Tema</span><small id="valTheme"></small><b>›</b></button>
+      <button class="set-item" data-go="quick" type="button"><span>Opción rápida</span><small id="valQuick"></small><b>›</b></button>
+      <button class="set-item" data-go="links" type="button"><span>Accesos directos</span><small id="valLinks"></small><b>›</b></button>
+    </div>
+
+    <div class="panel" id="pnlTheme" hidden>
     <div class="swatches">
       <button class="sw" type="button" data-t="azul"><i style="background:#1d5fe0"></i>Azul</button>
       <button class="sw" type="button" data-t="negro"><i style="background:#0b0b0d"></i>Negro</button>
@@ -313,8 +342,46 @@
       <button class="sw" type="button" data-t="amarillo"><i style="background:#ffd93d"></i>Amarillo</button>
       <button class="sw" type="button" data-t="blanco"><i style="background:#fff"></i>Blanco</button>
     </div>
+    </div>
+
+    <div class="panel" id="pnlQuick" hidden>
+    <div class="sub" style="margin-bottom:10px">Crea botones que agregan una ganancia al día con un solo toque.</div>
+    <div id="qList"></div>
+    <div id="qForm">
+      <input type="text" id="qName" placeholder="Descripción (opcional)">
+      <div class="grid2">
+        <div>
+          <label for="qMoney">Recaudado ($)</label>
+          <input type="number" id="qMoney" inputmode="decimal" min="0" step="any" placeholder="0.00">
+        </div>
+        <div>
+          <label for="qItems">Cantidad vendida</label>
+          <input type="number" id="qItems" inputmode="numeric" min="0" step="1" placeholder="0">
+        </div>
+      </div>
+      <div class="form-actions" style="justify-content:flex-end;gap:10px">
+        <button class="btn-del" id="qCancel" type="button" hidden>Cancelar</button>
+        <button class="btn-done" id="qSave" type="button">Agregar</button>
+      </div>
+    </div>
+    </div>
+
+    <div class="panel" id="pnlLinks" hidden>
+      <div class="sub" style="margin-bottom:10px">Guarda páginas web para abrirlas con un toque.</div>
+      <div id="lList"></div>
+      <div id="lForm">
+        <input type="text" id="lName" placeholder="Nombre (opcional)">
+        <input type="url" id="lUrl" inputmode="url" autocapitalize="off" autocomplete="off" placeholder="https://ejemplo.com" style="margin-top:10px">
+        <div class="form-actions" style="justify-content:flex-end;gap:10px">
+          <button class="btn-del" id="lCancel" type="button" hidden>Cancelar</button>
+          <button class="btn-done" id="lSave" type="button">Agregar</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+<div class="toast" id="toast" hidden></div>
 
 <script>
 (function(){
@@ -793,6 +860,7 @@
   function applyTheme(t){
     theme = t;
     document.documentElement.setAttribute('data-theme', t);
+    byId('valTheme').textContent = cap(t);
     var mt = document.querySelector('meta[name=theme-color]');
     if(mt) mt.setAttribute('content', THEME_BG[t]);
     Array.prototype.forEach.call(document.querySelectorAll('.sw'), function(b){
@@ -803,7 +871,7 @@
 
   var $set = byId('settings');
   function closeSettings(){ $set.hidden = true; }
-  byId('gear').addEventListener('click', function(){ $set.hidden = false; });
+  byId('gear').addEventListener('click', function(){ showPanel('main'); $set.hidden = false; });
   byId('setClose').addEventListener('click', closeSettings);
   $set.addEventListener('click', function(e){ if(e.target === $set) closeSettings(); });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeSettings(); });
@@ -868,6 +936,193 @@
     byId(id).addEventListener('keydown', function(ev){ if(ev.key === 'Enter'){ ev.preventDefault(); addExpense(); } });
   });
   byId('expDate').addEventListener('change', function(){ if(this.value) openDay(this.value, 'expenses'); });
+
+  /* ---------- Opción rápida ---------- */
+  var QKEY = 'rapidas_v1', quickList = [], qEdit = null;
+  try { quickList = JSON.parse(localStorage.getItem(QKEY)) || []; } catch(e) { quickList = []; }
+  function saveQuick(){ try { localStorage.setItem(QKEY, JSON.stringify(quickList)); } catch(e) {} }
+
+  var toastT;
+  function toast(msg){
+    var t = byId('toast');
+    t.textContent = msg; t.hidden = false;
+    clearTimeout(toastT);
+    toastT = setTimeout(function(){ t.hidden = true; }, 1700);
+  }
+
+  function addQuick(q){
+    closeEditing();
+    entries.push({id: uid(), name: q.name || '', money: q.money, items: q.items});
+    save(); renderAll();
+    var tg = parseTag(q.name);
+    toast('Agregado' + (tg.text ? ': ' + tg.text : ''));
+  }
+
+  function qReset(){
+    qEdit = null;
+    byId('qName').value = ''; byId('qMoney').value = ''; byId('qItems').value = '';
+    byId('qSave').textContent = 'Agregar';
+    byId('qCancel').hidden = true;
+  }
+
+  function renderQuick(){
+    var host = byId('quick'), list = byId('qList');
+    host.innerHTML = ''; list.innerHTML = '';
+    byId('quickWrap').hidden = !quickList.length;
+    byId('valQuick').textContent = quickList.length ? quickList.length : 'Ninguna';
+    quickList.forEach(function(q, i){
+      var tg = parseTag(q.name);
+      var label = tg.text || ('Rápida ' + (i + 1));
+      var amt = (q.money === '' || q.money == null) ? '' : fmtMoney(num(q.money));
+      var qty = (q.items === '' || q.items == null) ? '' : fmtNum(num(q.items));
+
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'qchip';
+      var sp = document.createElement('span'); sp.textContent = label;
+      if(tg.color) sp.style.color = tg.color;
+      b.appendChild(sp);
+      if(amt){ var sm = document.createElement('small'); sm.textContent = amt; b.appendChild(sm); }
+      b.addEventListener('click', function(){ addQuick(q); });
+      host.appendChild(b);
+
+      var row = document.createElement('div'); row.className = 'ent';
+      var main = document.createElement('div'); main.className = 'ent-main';
+      var st = document.createElement('strong'); st.textContent = label;
+      if(tg.color) st.style.color = tg.color;
+      var sub = document.createElement('small');
+      sub.textContent = [amt, qty ? qty + ' vendidos' : ''].filter(Boolean).join(' · ') || 'Sin monto';
+      main.appendChild(st); main.appendChild(sub);
+      var btns = document.createElement('div'); btns.className = 'qbtns';
+      var ed = document.createElement('button'); ed.type = 'button'; ed.className = 'chip'; ed.textContent = 'Editar';
+      ed.addEventListener('click', function(){
+        qEdit = q.id;
+        byId('qName').value = q.name || '';
+        byId('qMoney').value = (q.money === '' || q.money == null) ? '' : q.money;
+        byId('qItems').value = (q.items === '' || q.items == null) ? '' : q.items;
+        byId('qSave').textContent = 'Guardar';
+        byId('qCancel').hidden = false;
+        byId('qName').focus();
+      });
+      var del = document.createElement('button'); del.type = 'button'; del.className = 'btn-del'; del.textContent = 'Eliminar';
+      del.addEventListener('click', function(){
+        quickList = quickList.filter(function(x){ return x.id !== q.id; });
+        if(qEdit === q.id) qReset();
+        saveQuick(); renderQuick();
+      });
+      btns.appendChild(ed); btns.appendChild(del);
+      row.appendChild(main); row.appendChild(btns);
+      list.appendChild(row);
+    });
+  }
+
+  byId('qSave').addEventListener('click', function(){
+    var name = byId('qName').value.trim();
+    var mv = byId('qMoney').value, iv = byId('qItems').value;
+    if(!name && num(mv) <= 0){ byId('qMoney').focus(); return; }
+    var data = {name: name, money: mv === '' ? '' : num(mv), items: iv === '' ? '' : num(iv)};
+    if(qEdit){
+      quickList.forEach(function(x){ if(x.id === qEdit){ x.name = data.name; x.money = data.money; x.items = data.items; } });
+    } else {
+      data.id = uid(); quickList.push(data);
+    }
+    qReset(); saveQuick(); renderQuick();
+  });
+  byId('qCancel').addEventListener('click', qReset);
+  renderQuick();
+
+  /* ---------- Accesos directos ---------- */
+  var LKEY = 'accesos_v1', linkList = [], lEdit = null;
+  try { linkList = JSON.parse(localStorage.getItem(LKEY)) || []; } catch(e) { linkList = []; }
+  function saveLinks(){ try { localStorage.setItem(LKEY, JSON.stringify(linkList)); } catch(e) {} }
+
+  function fixUrl(u){
+    u = u.trim();
+    if(!u) return '';
+    if(!/^[a-z][a-z0-9+.-]*:/i.test(u)) u = 'https://' + u;
+    try {
+      var x = new URL(u);
+      return (x.protocol === 'http:' || x.protocol === 'https:') ? x.href : '';
+    } catch(e) { return ''; }
+  }
+  function hostOf(u){ try { return new URL(u).hostname.replace(/^www\./, ''); } catch(e) { return u; } }
+
+  function lReset(){
+    lEdit = null;
+    byId('lName').value = ''; byId('lUrl').value = '';
+    byId('lSave').textContent = 'Agregar';
+    byId('lCancel').hidden = true;
+  }
+
+  function renderLinks(){
+    var list = byId('lList');
+    list.innerHTML = '';
+    byId('valLinks').textContent = linkList.length ? linkList.length : 'Ninguno';
+    if(!linkList.length){
+      var box = document.createElement('div'); box.className = 'empty';
+      box.textContent = 'Aún no tienes accesos directos.';
+      list.appendChild(box);
+      return;
+    }
+    linkList.forEach(function(l){
+      var row = document.createElement('div'); row.className = 'ent';
+      var a = document.createElement('a');
+      a.className = 'ent-main lnk'; a.href = l.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      var st = document.createElement('strong'); st.textContent = l.name || hostOf(l.url);
+      var sm = document.createElement('small'); sm.textContent = hostOf(l.url);
+      a.appendChild(st); a.appendChild(sm);
+      var btns = document.createElement('div'); btns.className = 'qbtns';
+      var ed = document.createElement('button'); ed.type = 'button'; ed.className = 'chip'; ed.textContent = 'Editar';
+      ed.addEventListener('click', function(){
+        lEdit = l.id;
+        byId('lName').value = l.name || ''; byId('lUrl').value = l.url;
+        byId('lSave').textContent = 'Guardar';
+        byId('lCancel').hidden = false;
+        byId('lName').focus();
+      });
+      var del = document.createElement('button'); del.type = 'button'; del.className = 'btn-del'; del.textContent = 'Eliminar';
+      del.addEventListener('click', function(){
+        linkList = linkList.filter(function(x){ return x.id !== l.id; });
+        if(lEdit === l.id) lReset();
+        saveLinks(); renderLinks();
+      });
+      btns.appendChild(ed); btns.appendChild(del);
+      row.appendChild(a); row.appendChild(btns);
+      list.appendChild(row);
+    });
+  }
+
+  function saveLink(){
+    var url = fixUrl(byId('lUrl').value);
+    if(!url){ byId('lUrl').focus(); toast('Escribe una dirección web válida'); return; }
+    var name = byId('lName').value.trim();
+    if(lEdit){
+      linkList.forEach(function(x){ if(x.id === lEdit){ x.name = name; x.url = url; } });
+    } else {
+      linkList.push({id: uid(), name: name, url: url});
+    }
+    lReset(); saveLinks(); renderLinks();
+  }
+  byId('lSave').addEventListener('click', saveLink);
+  byId('lCancel').addEventListener('click', lReset);
+  ['lName','lUrl'].forEach(function(id){
+    byId(id).addEventListener('keydown', function(ev){ if(ev.key === 'Enter'){ ev.preventDefault(); saveLink(); } });
+  });
+  renderLinks();
+
+  /* ---------- Apartados de Ajustes ---------- */
+  var PANELS = {main:'pnlMain', theme:'pnlTheme', quick:'pnlQuick', links:'pnlLinks'};
+  var PTITLES = {main:'Configuración', theme:'Tema', quick:'Opción rápida', links:'Accesos directos'};
+  function showPanel(name){
+    Object.keys(PANELS).forEach(function(k){ byId(PANELS[k]).hidden = k !== name; });
+    byId('setTitle').textContent = PTITLES[name];
+    byId('setBack').hidden = name === 'main';
+    qReset(); lReset();
+    document.querySelector('.sheet').scrollTop = 0;
+  }
+  byId('setBack').addEventListener('click', function(){ showPanel('main'); });
+  Array.prototype.forEach.call(document.querySelectorAll('.set-item'), function(b){
+    b.addEventListener('click', function(){ showPanel(b.getAttribute('data-go')); });
+  });
 
   /* ---------- Deslizar para cambiar de opción ---------- */
   var ORDER = ['today', 'history', 'expenses'];
