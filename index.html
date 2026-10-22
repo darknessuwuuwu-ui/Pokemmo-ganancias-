@@ -289,6 +289,41 @@
   .pie-row span{flex:1}
   .pie-row b{font-weight:700;white-space:nowrap}
   .pie-row small{color:var(--muted);font-weight:600;min-width:34px;text-align:right}
+  /* ===== Menú de 7 opciones ===== */
+  .nav-inner{grid-template-columns:repeat(7,1fr)}
+  .tab{font-size:.62rem;min-width:0;padding:0 1px}
+  .tab .ti{width:40px}
+  @media (max-width:340px){.tab{font-size:.56rem}.tab .ti{width:34px}}
+  .chip:disabled{opacity:.5;cursor:default}
+
+  /* ===== Deudas ===== */
+  .debt-sum{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+  .card.ds{margin:0;padding:14px 10px;text-align:center}
+  .ds-amt{font-size:1.1rem;font-weight:800;letter-spacing:-.01em;margin-top:6px;line-height:1.3;word-break:break-word}
+  .ds-eq{font-size:.75rem;color:var(--muted);margin-top:4px}
+  .ent-sub{display:block;font-size:.7rem;color:var(--muted);margin-top:2px;white-space:nowrap}
+  .ent.dpaid{opacity:.6}
+  .dhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .dhead strong{font-size:1.05rem;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .dmeta{font-size:.78rem;color:var(--muted);margin-top:4px;line-height:1.4}
+  .dbar{height:6px;border-radius:999px;background:var(--surface2);overflow:hidden;margin:10px 0 6px}
+  .dbar i{display:block;height:100%;border-radius:999px;background:var(--blue-l)}
+  .dpay{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.82rem;padding:4px 0;border-top:1px solid var(--line)}
+  .dsec{margin:16px 0 8px}
+
+  /* ===== Tasas y modo online ===== */
+  .rt-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+  .rt-top small{color:var(--muted);font-size:.8rem}
+  .rt-err{font-size:.82rem;color:var(--downx);background:rgba(255,92,108,.12);border-radius:12px;padding:10px 12px;margin-bottom:12px;line-height:1.4}
+  .rt-rate{cursor:default}
+  .rt-rate .ent-amt{font-size:1.2rem}
+  .rt-out{margin-top:12px;font-size:.9rem;line-height:1.8}
+  .rt-out b{font-weight:800}
+  .rt-src{text-align:center;color:var(--muted);font-size:.72rem;margin-top:14px}
+  .olnk{color:var(--blue-l);text-decoration:underline}
+  .onmsg{font-size:.82rem;margin-top:12px;color:var(--muted);line-height:1.4}
+  .onmsg.err{color:var(--downx)}
+  .onmsg.ok{color:var(--upx)}
 </style>
 </head>
 <body>
@@ -392,6 +427,72 @@
     <div id="expList"></div>
   </section>
 
+  <!-- ===== DEUDAS ===== -->
+  <section id="viewDebt" hidden>
+    <h1>Deudas</h1>
+    <div class="sub">Anota lo que te deben y lo que debes. No cambian tu dinero hasta que tú lo registres.</div>
+    <div class="debt-sum">
+      <div class="card ds"><div class="label">Me deben</div><div class="ds-amt gain" id="dOwedAmt">0</div><div class="ds-eq" id="dOwedEq" hidden></div></div>
+      <div class="card ds"><div class="label">Debo</div><div class="ds-amt loss" id="dOweAmt">0</div><div class="ds-eq" id="dOweEq" hidden></div></div>
+    </div>
+    <div class="seg" id="dSeg" style="margin-top:0">
+      <button type="button" class="on" data-k="owed">Me deben</button>
+      <button type="button" data-k="owe">Debo</button>
+    </div>
+    <div class="form" id="dForm" hidden>
+      <div class="seg" id="dFormKind" style="margin:0 0 12px">
+        <button type="button" class="on" data-k="owed">Me deben</button>
+        <button type="button" data-k="owe">Debo</button>
+      </div>
+      <input type="text" id="dPerson" maxlength="40" autocomplete="off" placeholder="Persona (ej. Carlos)">
+      <input type="text" id="dNote" maxlength="80" autocomplete="off" placeholder="Nota (opcional)" style="margin-top:10px">
+      <div class="grid2">
+        <div>
+          <label for="dAmt">Monto</label>
+          <input type="number" id="dAmt" inputmode="decimal" min="0" step="any" placeholder="0">
+        </div>
+        <div>
+          <label for="dCur">Moneda</label>
+          <select class="sel" id="dCur" style="width:100%;max-width:100%;padding:12px 10px">
+            <option value="CUP">CUP</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="MLC">MLC</option>
+          </select>
+        </div>
+      </div>
+      <label for="dDue" style="margin-top:12px">Fecha límite (opcional)</label>
+      <input type="date" id="dDue" style="width:100%;border-radius:12px;padding:11px 12px">
+      <div class="form-actions">
+        <button class="btn-del" id="dCancel" type="button">Cancelar</button>
+        <button class="btn-done" id="dSave" type="button">Guardar</button>
+      </div>
+    </div>
+    <button class="btn-wide sec" id="dNew" type="button" style="margin:0 0 14px">+ Nueva deuda</button>
+    <div id="dList"></div>
+  </section>
+
+  <!-- ===== TASAS ===== -->
+  <section id="viewRates" hidden>
+    <h1>Tasas de cambio</h1>
+    <div class="sub">Cuánto vale cada moneda en pesos cubanos (CUP), según elTOQUE.</div>
+    <div id="rtBody"></div>
+    <div class="card" id="rtCalc" hidden>
+      <div class="label">Convertir</div>
+      <div class="grid2" style="margin-top:10px">
+        <div>
+          <label for="rtAmt">Cantidad</label>
+          <input type="number" id="rtAmt" inputmode="decimal" min="0" step="any" placeholder="1" value="1">
+        </div>
+        <div>
+          <label for="rtCur">Moneda</label>
+          <select class="sel" id="rtCur" style="width:100%;max-width:100%;padding:12px 10px">
+            <option value="USD">USD</option><option value="EUR">EUR</option><option value="MLC">MLC</option>
+          </select>
+        </div>
+      </div>
+      <div class="rt-out" id="rtOut"></div>
+    </div>
+    <div class="rt-src">Fuente: elTOQUE</div>
+  </section>
+
 </div>
 
 <!-- ===== MENÚ INFERIOR ===== -->
@@ -405,14 +506,22 @@
       <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
       Historial
     </button>
+    <button class="tab" data-view="expenses" type="button">
+      <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/></svg></span>
+      Gastos
+    </button>
     <div class="fab-slot">
       <button class="fab" id="fab" type="button" aria-label="Crear nueva ganancia" title="Crear nueva ganancia">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
       </button>
     </div>
-    <button class="tab" data-view="expenses" type="button">
-      <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/></svg></span>
-      Gastos
+    <button class="tab" data-view="debts" type="button">
+      <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h13M16 3l4 4-4 4M17 17H4M8 13l-4 4 4 4"/></svg></span>
+      Deudas
+    </button>
+    <button class="tab" data-view="rates" type="button">
+      <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg></span>
+      Tasas
     </button>
     <button class="tab" id="gear" type="button" aria-haspopup="dialog">
       <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
@@ -433,6 +542,7 @@
       <button class="set-item" data-go="account" type="button"><span>Cuenta</span><small id="valAccount"></small><b>›</b></button>
       <button class="set-item" data-go="clan" type="button"><span>Clan</span><small id="valClan"></small><b>›</b></button>
       <button class="set-item" data-go="money" type="button"><span>Dinero que tengo</span><small id="valMoney"></small><b>›</b></button>
+      <button class="set-item" data-go="online" type="button"><span>Modo online · tasas</span><small id="valOnline"></small><b>›</b></button>
       <button class="set-item" data-go="theme" type="button"><span>Tema</span><small id="valTheme"></small><b>›</b></button>
       <button class="set-item" data-go="chart" type="button"><span>Tipo de gráfica</span><small id="valChart"></small><b>›</b></button>
       <button class="set-item" data-go="colors" type="button"><span>Editor de colores</span><small id="valCustom"></small><b>›</b></button>
@@ -456,7 +566,7 @@
 
       <hr class="sep" style="margin:18px 0 14px">
       <div class="set-name">Importar y exportar</div>
-      <div class="sub" style="margin-bottom:6px">Exporta tu cuenta a un archivo que guarda toda la información: ganancias, gastos, dinero que tienes, perfil con foto, opciones rápidas, accesos directos y tema. También puedes sacar una hoja de <b>Excel</b> con tus ganancias y gastos.</div>
+      <div class="sub" style="margin-bottom:6px">Exporta tu cuenta a un archivo que guarda toda la información: ganancias, gastos, dinero que tienes, perfil con foto, opciones rápidas, deudas, accesos directos y tema. También puedes sacar una hoja de <b>Excel</b> con tus ganancias y gastos.</div>
       <button class="btn-wide pri" id="bkExport" type="button">Exportar cuenta</button>
       <button class="btn-wide sec" id="bkExcel" type="button">Exportar a Excel</button>
       <button class="btn-wide sec" id="bkImport" type="button">Importar cuenta</button>
@@ -464,6 +574,7 @@
       <div class="sub" style="margin:12px 0 0;font-size:.78rem">Al importar, se reemplaza toda la información actual por la del archivo.</div>
     </div>
 
+    
     <div class="panel" id="pnlClan" hidden>
       <label for="clName">Nombre del clan</label>
       <input type="text" id="clName" maxlength="30" autocomplete="off" placeholder="Ej. Los Entrenadores">
@@ -508,6 +619,20 @@
       <div class="form-actions" style="justify-content:flex-end"><button class="btn-done" id="clRAdd" type="button">Agregar</button></div>
       <div class="set-name cl-sub">Función de cada miembro</div>
       <div id="clAssign"></div>
+    </div>
+
+    
+    <div class="panel" id="pnlOnline" hidden>
+      <div class="sub" style="margin-bottom:12px">Con el modo online la app consulta las tasas de cambio de la moneda cubana en elTOQUE. Solo se descargan las tasas: tus ganancias, gastos y deudas siguen únicamente en tu teléfono.</div>
+      <div class="seg" id="onSeg" style="margin-top:0">
+        <button type="button" data-on="0">Apagado</button>
+        <button type="button" data-on="1">Encendido</button>
+      </div>
+      <label for="onToken" style="margin-top:14px">Token de elTOQUE</label>
+      <input type="password" id="onToken" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Pega aquí tu token">
+      <div class="sub" style="margin:8px 0 0;font-size:.78rem">El token es gratis: pídelo en <a class="olnk" href="https://tasas-token.eltoque.com/" target="_blank" rel="noopener noreferrer">tasas-token.eltoque.com</a>. Se queda solo en este dispositivo y no se incluye al exportar la cuenta.</div>
+      <button class="btn-wide pri" id="onSave" type="button">Guardar y actualizar</button>
+      <div class="onmsg" id="onMsg"></div>
     </div>
 
     <div class="panel" id="pnlMoney" hidden>
@@ -583,6 +708,7 @@
     </div>
     </div>
 
+    
     <div class="panel" id="pnlLinks" hidden>
       <div class="sub" style="margin-bottom:10px">Guarda páginas web para abrirlas con un toque.</div>
       <div id="lList"></div>
@@ -595,6 +721,7 @@
         </div>
       </div>
     </div>
+    
   </div>
 </div>
 
@@ -610,6 +737,8 @@
       <button class="g-item" data-gg="colors" type="button"><span>Colores RGB<em class="gd">Los colores hexadecimales del botón + y del perfil</em></span><b>›</b></button>
       <button class="g-item" data-gg="home" type="button"><span>Inicio y Historial<em class="gd">Cómo registrar ganancias y ver tus días</em></span><b>›</b></button>
       <button class="g-item" data-gg="charts" type="button"><span>Tipos de gráfica<em class="gd">Cómo leer Barras, Flechas, Puntos y Pastel</em></span><b>›</b></button>
+      <button class="g-item" data-gg="debts" type="button"><span>Deudas<em class="gd">Lo que te deben y lo que debes</em></span><b>›</b></button>
+      <button class="g-item" data-gg="online" type="button"><span>Tasas y modo online<em class="gd">Cambio de la moneda cubana (elTOQUE)</em></span><b>›</b></button>
       <button class="g-item" data-gg="expenses" type="button"><span>Gastos<em class="gd">Anota lo que gastas</em></span><b>›</b></button>
       <button class="g-item" data-gg="money" type="button"><span>Dinero que tengo<em class="gd">Tu saldo, siempre al día</em></span><b>›</b></button>
       <button class="g-item" data-gg="quick" type="button"><span>Opción rápida y accesos<em class="gd">Atajos para ahorrar toques</em></span><b>›</b></button>
@@ -618,6 +747,7 @@
       <button class="g-item" data-gg="account" type="button"><span>Cuenta y copia de seguridad<em class="gd">Foto, nombre, importar y exportar</em></span><b>›</b></button>
     </div>
 
+    
     <div class="panel" id="gpColors" hidden>
       <div class="rgb-title" id="rgbTitle" aria-label="Colores hexadecimales RGB"></div>
       <p class="gp">Estos son los colores <b>hexadecimales</b> del efecto RGB animado. Se usan en el <b>botón +</b>, en el <b>aro de la foto de perfil</b> y en los <b>botones de Cuenta</b>.</p>
@@ -629,11 +759,12 @@
       <p class="gp" style="color:var(--muted);font-size:.78rem;margin-top:12px">Toca un color para copiar su código.</p>
     </div>
 
+    
     <div class="panel" id="gpHome" hidden>
       <p class="gp"><b>Inicio:</b> toca el botón <b>+</b> para crear una ganancia con el dinero recaudado y la cantidad vendida. Arriba ves el total del día y el total ganado.</p>
       <p class="gp"><b>Historial:</b> revisa tus días anteriores y las gráficas de lo que has ganado.</p>
       <p class="gp"><b>Tipo de gráfica:</b> en <b>Ajustes → Tipo de gráfica</b> eliges cómo se ve: Barras, Flechas, Puntos o Pastel. Mira cómo leer cada una en la sección <b>Tipos de gráfica</b> de esta guía.</p>
-      <p class="gp"><b>Moverte rápido:</b> desliza la pantalla hacia los lados para cambiar entre Inicio, Historial y Gastos.</p>
+      <p class="gp"><b>Moverte rápido:</b> desliza la pantalla hacia los lados para cambiar entre Inicio, Historial, Gastos, Deudas y Tasas.</p>
     </div>
 
     <div class="panel" id="gpCharts" hidden>
@@ -672,16 +803,31 @@
 
     <div class="panel" id="gpMore" hidden>
       <p class="gp"><b>Buscar en el Historial:</b> escribe una fecha (por ejemplo "oct" o "2026-10-22") o una descripción y solo verás los días que coincidan.</p>
-      <p class="gp"><b>Deshacer:</b> al borrar una ganancia, un gasto, un día, el historial, una opción rápida o un acceso, aparece un aviso con el botón <b>Deshacer</b> por unos segundos.</p>
+      <p class="gp"><b>Deshacer:</b> al borrar una ganancia, un gasto, un día, el historial, una opción rápida, un acceso o una deuda, aparece un aviso con el botón <b>Deshacer</b> por unos segundos.</p>
       <p class="gp"><b>Editor de colores:</b> en Ajustes eliges tu propio color de fondo y de acento.</p>
       <p class="gp"><b>Excel:</b> en Ajustes → Cuenta, el botón <b>Exportar a Excel</b> crea un archivo .xlsx con las hojas Resumen, Ganancias y Gastos.</p>
     </div>
 
+    
     <div class="panel" id="gpClan" hidden>
       <p class="gp">En <b>Ajustes → Clan</b> pones el nombre de tu clan y sus iniciales, como en el juego.</p>
       <p class="gp"><b>Jugadores:</b> agrega o quita a los miembros.</p>
       <p class="gp"><b>Capital:</b> lleva el dinero del clan con depósitos y retiros, y un registro de cada movimiento.</p>
       <p class="gp"><b>Funciones:</b> crea funciones (Líder, Oficial, Tesorero...) y elige cuál tiene cada miembro.</p>
+    </div>
+
+    
+    <div class="panel" id="gpDebts" hidden>
+      <p class="gp">En la pestaña <b>Deudas</b> eliges <b>Me deben</b> (lo que otros te deben a ti) o <b>Debo</b> (lo que tú debes). Toca <b>+ Nueva deuda</b> —o el botón <b>+</b> de abajo mientras estás en Deudas— y escribe la persona, el monto y la moneda (CUP, USD, EUR o MLC).</p>
+      <p class="gp"><b>Abonos:</b> toca una deuda para abrirla. Escribe un abono y toca <b>Abonar</b>, o usa <b>Pagar todo</b>. Cuando el saldo llega a cero pasa a <b>Pagadas</b>.</p>
+      <p class="gp"><b>Fecha límite:</b> es opcional. Si pasa y la deuda sigue pendiente, aparece marcada como <b>Vencida</b>.</p>
+      <p class="gp">Las deudas <b>no cambian</b> tu \"Dinero que tengo\". Si pagas o cobras de verdad, anótalo en Gastos o en Inicio. Con el modo online encendido, los totales muestran además su equivalente aproximado en CUP.</p>
+    </div>
+
+    <div class="panel" id="gpOnline" hidden>
+      <p class="gp">En <b>Ajustes → Modo online · tasas</b> enciendes el modo online y pegas tu <b>token</b> de elTOQUE (es gratis en tasas-token.eltoque.com). Toca <b>Guardar y actualizar</b>.</p>
+      <p class="gp">La pestaña <b>Tasas</b> muestra cuánto vale el dólar, el euro y el MLC en pesos cubanos, y tiene un conversor. Se actualiza sola al abrirla si pasaron más de 15 minutos, o con el botón <b>Actualizar</b>.</p>
+      <p class="gp">Sin internet verás la última tasa guardada con su hora. Solo se descargan las tasas de cambio; el token se queda en tu dispositivo y no se exporta con tu cuenta.</p>
     </div>
 
     <div class="panel" id="gpAccount" hidden>
@@ -1270,6 +1416,8 @@
     renderEntries();
     renderExpenses();
     refreshStats();
+    renderDebts();
+    renderRates();
   }
 
   /* ---------- Navegación ---------- */
@@ -1281,10 +1429,15 @@
     $viewToday.hidden = name !== 'today';
     $viewHist.hidden = name !== 'history';
     $viewExp.hidden = name !== 'expenses';
+    byId('viewDebt').hidden = name !== 'debts';
+    byId('viewRates').hidden = name !== 'rates';
+    var fabT = name === 'debts' ? 'Nueva deuda' : 'Crear nueva ganancia';
+    byId('fab').title = fabT; byId('fab').setAttribute('aria-label', fabT);
     tabs.forEach(function(t){
       t.classList.toggle('active', t.getAttribute('data-view') === name);
     });
     window.scrollTo(0, 0);
+    if(name === 'rates') ratesOnShow();
   }
 
   function openDay(d, v){
@@ -1309,7 +1462,7 @@
   tabs.forEach(function(t){
     t.addEventListener('click', function(){ showView(t.getAttribute('data-view')); });
   });
-  byId('fab').addEventListener('click', addEntry);
+  byId('fab').addEventListener('click', function(){ if(view === 'debts') openDebtForm(); else addEntry(); });
   $back.addEventListener('click', function(){ openDay(todayStr()); });
   $date.addEventListener('change', function(){
     if($date.value) openDay($date.value);
@@ -1639,6 +1792,7 @@
   });
   renderLinks();
 
+
   /* ---------- Cuenta y foto de perfil ---------- */
   var PKEY = 'perfil_v1', profile = null, draftPhoto = '';
   try { profile = JSON.parse(localStorage.getItem(PKEY)) || null; } catch(e) { profile = null; }
@@ -1743,7 +1897,7 @@
     return {
       app: 'mis-ganancias', version: 1, exported: new Date().toISOString(),
       data: {
-        ganancias: all, gastos: exps, rapidas: quickList, accesos: linkList,
+        ganancias: all, gastos: exps, rapidas: quickList, accesos: linkList, deudas: debts,
         dinero_base: baseMoney, perfil: profile, tema: theme, colores: custom, clan: clan, grafica: chartType
       }
     };
@@ -1793,6 +1947,7 @@
       var u = fixUrl(String(l.url || ''));
       if(u) nLinks.push({id: l.id || uid(), name: String(l.name || ''), url: u});
     });
+    var nDebts = sanitizeDebts(d.deudas);
     var nBase = parseFloat(d.dinero_base); if(isNaN(nBase)) nBase = 0;
     var nProf = null;
     if(isObj(d.perfil) && typeof d.perfil.name === 'string'){
@@ -1802,6 +1957,7 @@
 
     clan = sanitizeClan(d.clan);
     all = nAll; exps = nExp; quickList = nQuick; linkList = nLinks; baseMoney = nBase; profile = nProf;
+    debts = nDebts; dOpen = null;
     editingId = null;
     entries = all[currentDate] || [];
     if(isObj(d.colores)){
@@ -1823,6 +1979,7 @@
       localStorage.setItem(LKEY, JSON.stringify(linkList));
       localStorage.setItem(BKEY, String(baseMoney));
       saveClan();
+      localStorage.setItem(DKEY, JSON.stringify(debts));
       localStorage.setItem(THEME_KEY, theme);
       if(profile) localStorage.setItem(PKEY, JSON.stringify(profile)); else localStorage.removeItem(PKEY);
     } catch(e) { toast('No se pudo guardar todo en el dispositivo'); }
@@ -1902,17 +2059,24 @@
       expList(d).forEach(function(x){ eRows.push([d, parseTag(x.name).text || '', Math.round(num(x.money))]); });
     });
 
+    var dRows = [['Tipo', 'Persona', 'Nota', 'Moneda', 'Monto', 'Abonado', 'Pendiente', 'Fecha límite', 'Estado']];
+    debts.forEach(function(x){
+      dRows.push([x.kind === 'owed' ? 'Me deben' : 'Debo', x.person, x.note, x.cur, x.amount, paidOf(x), leftOf(x), x.due || '',
+        isPaid(x) ? 'Pagada' : (isLate(x) ? 'Vencida' : 'Pendiente')]);
+    });
+
     var ns = 'xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"', rel = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
     var H = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
     var blob = zipStore([
-      {name:'[Content_Types].xml', text: H + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet3.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'},
+      {name:'[Content_Types].xml', text: H + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet3.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet4.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'},
       {name:'_rels/.rels', text: H + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="' + rel + '/officeDocument" Target="xl/workbook.xml"/></Relationships>'},
-      {name:'xl/workbook.xml', text: H + '<workbook ' + ns + ' xmlns:r="' + rel + '"><sheets><sheet name="Resumen" sheetId="1" r:id="rId1"/><sheet name="Ganancias" sheetId="2" r:id="rId2"/><sheet name="Gastos" sheetId="3" r:id="rId3"/></sheets></workbook>'},
-      {name:'xl/_rels/workbook.xml.rels', text: H + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="' + rel + '/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="' + rel + '/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="' + rel + '/worksheet" Target="worksheets/sheet3.xml"/><Relationship Id="rId4" Type="' + rel + '/styles" Target="styles.xml"/></Relationships>'},
+      {name:'xl/workbook.xml', text: H + '<workbook ' + ns + ' xmlns:r="' + rel + '"><sheets><sheet name="Resumen" sheetId="1" r:id="rId1"/><sheet name="Ganancias" sheetId="2" r:id="rId2"/><sheet name="Gastos" sheetId="3" r:id="rId3"/><sheet name="Deudas" sheetId="4" r:id="rId5"/></sheets></workbook>'},
+      {name:'xl/_rels/workbook.xml.rels', text: H + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="' + rel + '/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="' + rel + '/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="' + rel + '/worksheet" Target="worksheets/sheet3.xml"/><Relationship Id="rId4" Type="' + rel + '/styles" Target="styles.xml"/><Relationship Id="rId5" Type="' + rel + '/worksheet" Target="worksheets/sheet4.xml"/></Relationships>'},
       {name:'xl/styles.xml', text: H + '<styleSheet ' + ns + '><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>'},
       {name:'xl/worksheets/sheet1.xml', text: sheetXml(sum, [18, 14, 14, 14, 11])},
       {name:'xl/worksheets/sheet2.xml', text: sheetXml(gRows, [14, 34, 14, 12])},
-      {name:'xl/worksheets/sheet3.xml', text: sheetXml(eRows, [14, 34, 14])}
+      {name:'xl/worksheets/sheet3.xml', text: sheetXml(eRows, [14, 34, 14])},
+      {name:'xl/worksheets/sheet4.xml', text: sheetXml(dRows, [12, 22, 30, 9, 12, 12, 12, 14, 12])}
     ]);
     deliverBlob(blob, 'admmo-' + todayStr() + '.xlsx');
   }
@@ -1922,7 +2086,7 @@
   var undoSnap = null, undoT;
   function pushUndo(msg){
     all[currentDate] = entries;
-    undoSnap = JSON.stringify({all: all, exps: exps, quick: quickList, links: linkList, clan: clan});
+    undoSnap = JSON.stringify({all: all, exps: exps, quick: quickList, links: linkList, clan: clan, debts: debts});
     byId('undoMsg').textContent = msg;
     byId('undoBar').hidden = false;
     clearTimeout(undoT);
@@ -1934,6 +2098,8 @@
     var snap;
     try { snap = JSON.parse(undoSnap); } catch(e) { return hideUndo(); }
     all = snap.all || {}; exps = snap.exps || {}; quickList = snap.quick || []; linkList = snap.links || [];
+    if(snap.debts) debts = sanitizeDebts(snap.debts);
+    dOpen = null;
     editingId = null;
     entries = all[currentDate] || [];
     try {
@@ -1942,6 +2108,7 @@
       localStorage.setItem(QKEY, JSON.stringify(quickList));
       localStorage.setItem(LKEY, JSON.stringify(linkList));
     } catch(e) {}
+    saveDebts();
     clan = sanitizeClan(snap.clan); saveClan();
     undoSnap = null; hideUndo();
     renderQuick(); renderLinks(); renderAll(); renderClan(); loadClanPanel();
@@ -2049,6 +2216,7 @@
     {g:'Morados y rosas', c:[['#9b59b6','Amatista'],['#800080','Púrpura'],['#4b0082','Índigo'],['#da70d6','Orquídea'],['#ee82ee','Violeta claro'],['#ff00ff','Magenta'],['#ff1493','Rosa fuerte'],['#ffc0cb','Rosa']]},
     {g:'Marrones y neutros', c:[['#8b4513','Café'],['#d2691e','Chocolate'],['#deb887','Arena'],['#808080','Gris'],['#c0c0c0','Plata'],['#000000','Negro'],['#ffffff','Blanco']]}
   ];
+
   function lum(hex){
     var n = parseInt(hex.slice(1), 16), r = n >> 16 & 255, g = n >> 8 & 255, b = n & 255;
     return (0.2126*r + 0.7152*g + 0.0722*b) / 255;
@@ -2078,9 +2246,10 @@
     });
   })();
 
+
   var $guide = byId('guide');
-  var GPANELS = {main:'gpMain', colors:'gpColors', home:'gpHome', charts:'gpCharts', expenses:'gpExpenses', money:'gpMoney', quick:'gpQuick', more:'gpMore', clan:'gpClan', account:'gpAccount'};
-  var GTITLES = {main:'Guía', colors:'Colores RGB', home:'Inicio y Historial', charts:'Tipos de gráfica', expenses:'Gastos', money:'Dinero que tengo', quick:'Opción rápida y accesos', more:'Buscar, deshacer y Excel', clan:'Clan', account:'Cuenta y copia de seguridad'};
+  var GPANELS = {main:'gpMain', colors:'gpColors', home:'gpHome', charts:'gpCharts', debts:'gpDebts', online:'gpOnline', expenses:'gpExpenses', money:'gpMoney', quick:'gpQuick', more:'gpMore', clan:'gpClan', account:'gpAccount'};
+  var GTITLES = {main:'Guía', colors:'Colores RGB', home:'Inicio y Historial', charts:'Tipos de gráfica', debts:'Deudas', online:'Tasas y modo online', expenses:'Gastos', money:'Dinero que tengo', quick:'Opción rápida y accesos', more:'Buscar, deshacer y Excel', clan:'Clan', account:'Cuenta y copia de seguridad'};
   function showGuide(name){
     Object.keys(GPANELS).forEach(function(k){ byId(GPANELS[k]).hidden = k !== name; });
     byId('gTitle').textContent = GTITLES[name];
@@ -2321,6 +2490,7 @@
   byId('clRet').addEventListener('click', function(){ moveCapital('ret'); });
   renderClan();
 
+
   /* ---------- Ajuste: tipo de gráfica ---------- */
   function syncChartUi(){
     byId('valChart').textContent = CHART_TYPES[chartType];
@@ -2341,9 +2511,9 @@
   syncChartUi();
 
   /* ---------- Apartados de Ajustes ---------- */
-  var PANELS = {main:'pnlMain', clan:'pnlClan', clPlayers:'pnlClPlayers', clCapital:'pnlClCapital', clRoles:'pnlClRoles', account:'pnlAccount', money:'pnlMoney', colors:'pnlColors', theme:'pnlTheme', chart:'pnlChart', quick:'pnlQuick', links:'pnlLinks'};
+  var PANELS = {main:'pnlMain', clan:'pnlClan', clPlayers:'pnlClPlayers', clCapital:'pnlClCapital', clRoles:'pnlClRoles', account:'pnlAccount', money:'pnlMoney', colors:'pnlColors', theme:'pnlTheme', chart:'pnlChart', quick:'pnlQuick', links:'pnlLinks', online:'pnlOnline'};
   var PARENT = {clPlayers:'clan', clCapital:'clan', clRoles:'clan'}, curPanel = 'main';
-  var PTITLES = {main:'Configuración', clan:'Clan', clPlayers:'Jugadores', clCapital:'Capital', clRoles:'Funciones', account:'Cuenta', money:'Dinero que tengo', colors:'Editor de colores', theme:'Tema', chart:'Tipo de gráfica', quick:'Opción rápida', links:'Accesos directos'};
+  var PTITLES = {main:'Configuración', clan:'Clan', clPlayers:'Jugadores', clCapital:'Capital', clRoles:'Funciones', account:'Cuenta', money:'Dinero que tengo', colors:'Editor de colores', theme:'Tema', chart:'Tipo de gráfica', quick:'Opción rápida', links:'Accesos directos', online:'Modo online'};
   function showPanel(name){
     Object.keys(PANELS).forEach(function(k){ byId(PANELS[k]).hidden = k !== name; });
     curPanel = name;
@@ -2353,6 +2523,7 @@
     if(name === 'account') loadAccountPanel();
     if(name === 'clan') loadClanPanel();
     if(PARENT[name]) renderClan();
+    if(name === 'online') loadOnlinePanel();
     if(name === 'colors') syncColorUi();
     if(name === 'chart') syncChartUi();
     if(name === 'money') byId('mnAmt').value = Math.round(baseMoney + netTotal());
@@ -2363,13 +2534,421 @@
     b.addEventListener('click', function(){ showPanel(b.getAttribute('data-go')); });
   });
 
+  /* ---------- Deudas ---------- */
+  var DKEY = 'deudas_v1', CURS = ['CUP', 'USD', 'EUR', 'MLC'], debts = [], dKind = 'owed', dFormK = 'owed', dOpen = null, dLastCur = 'CUP';
+  function r2(n){ return Math.round(num(n) * 100) / 100; }
+  function mk(tag, cls, text){
+    var n = document.createElement(tag);
+    if(cls) n.className = cls;
+    if(text != null && text !== '') n.textContent = text;
+    return n;
+  }
+  function sanitizeDebts(a){
+    if(!Array.isArray(a)) return [];
+    return a.filter(isObj).map(function(d){
+      var pays = (Array.isArray(d.pays) ? d.pays : []).filter(isObj).map(function(p){
+        return {id: String(p.id || uid()), amount: r2(p.amount), date: String(p.date || '').slice(0, 10)};
+      }).filter(function(p){ return p.amount > 0; });
+      return {
+        id: String(d.id || uid()), kind: d.kind === 'owe' ? 'owe' : 'owed',
+        person: String(d.person || '').slice(0, 40), note: String(d.note || '').slice(0, 80),
+        amount: r2(d.amount), cur: CURS.indexOf(d.cur) >= 0 ? d.cur : 'CUP',
+        date: String(d.date || '').slice(0, 10),
+        due: /^\d{4}-\d{2}-\d{2}$/.test(String(d.due || '')) ? String(d.due) : '',
+        pays: pays
+      };
+    }).filter(function(d){ return d.amount > 0 && d.person; });
+  }
+  try { debts = sanitizeDebts(JSON.parse(localStorage.getItem(DKEY))); } catch(e) { debts = []; }
+  function saveDebts(){ try { localStorage.setItem(DKEY, JSON.stringify(debts)); } catch(e) {} }
+  function paidOf(d){ var t = 0; d.pays.forEach(function(p){ t += p.amount; }); return r2(t); }
+  function leftOf(d){ return Math.max(0, r2(d.amount - paidOf(d))); }
+  function isPaid(d){ return leftOf(d) <= 0; }
+  function isLate(d){ return !isPaid(d) && !!d.due && d.due < todayStr(); }
+  function fmtAmt(n, cur){ return n.toLocaleString('es', {maximumFractionDigits: 2}) + ' ' + cur; }
+  function shortDay(d){ return parseDay(d).toLocaleDateString('es', {day: 'numeric', month: 'short'}).replace('.', ''); }
+
+  function pendingBy(kind){
+    var t = {};
+    debts.forEach(function(d){ if(d.kind === kind && !isPaid(d)) t[d.cur] = r2((t[d.cur] || 0) + leftOf(d)); });
+    return t;
+  }
+  function totText(t){
+    var ks = CURS.filter(function(c){ return t[c] > 0; });
+    return ks.length ? ks.map(function(c){ return fmtAmt(t[c], c); }).join(' · ') : '0';
+  }
+  // Equivalente en CUP solo si hay tasas y la lista mezcla monedas.
+  function cupEq(t){
+    var r = ratesNow();
+    if(!r) return null;
+    var sum = 0, foreign = false;
+    for(var i = 0; i < CURS.length; i++){
+      var c = CURS[i], v = t[c] || 0;
+      if(!(v > 0)) continue;
+      if(c === 'CUP') sum += v;
+      else { if(!r[c]) return null; sum += v * r[c]; foreign = true; }
+    }
+    return foreign ? sum : null;
+  }
+
+  function addPay(d, raw){
+    var a = r2(raw), left = leftOf(d);
+    if(a <= 0){ toast('Escribe el abono'); return; }
+    var capped = a > left;
+    if(capped) a = left;
+    d.pays.push({id: uid(), amount: a, date: todayStr()});
+    saveDebts();
+    if(isPaid(d)) dOpen = null;
+    renderDebts();
+    toast(isPaid(d) ? 'Deuda pagada' : (capped ? 'Abono ajustado al saldo' : 'Abono agregado'));
+  }
+
+  function debtCard(d, paid, left, clr){
+    var card = mk('div', 'form');
+    var head = mk('div', 'dhead');
+    head.appendChild(mk('strong', '', d.person));
+    head.appendChild(mk('span', 'ent-amt ' + clr, fmtAmt(paid ? d.amount : left, d.cur)));
+    card.appendChild(head);
+    if(d.note) card.appendChild(mk('div', 'dmeta', d.note));
+    var meta = 'Total ' + fmtAmt(d.amount, d.cur) + ' · Abonado ' + fmtAmt(paidOf(d), d.cur);
+    if(d.due) meta += ' · ' + (paid ? 'límite ' : 'vence ') + shortDay(d.due);
+    card.appendChild(mk('div', 'dmeta', meta));
+    var bar = mk('div', 'dbar'), fill = document.createElement('i');
+    fill.style.width = Math.min(100, Math.round(paidOf(d) / d.amount * 100)) + '%';
+    bar.appendChild(fill);
+    card.appendChild(bar);
+    if(isLate(d)) card.appendChild(mk('span', 'pill down', 'Vencida'));
+
+    if(!paid){
+      var g = mk('div', 'grid2'); g.style.alignItems = 'end';
+      var w = document.createElement('div');
+      w.appendChild(mk('label', '', 'Abono (' + d.cur + ')'));
+      var inp = document.createElement('input');
+      inp.type = 'number'; inp.inputMode = 'decimal'; inp.min = '0'; inp.step = 'any'; inp.placeholder = '0';
+      w.appendChild(inp);
+      var add = mk('button', 'btn-done', 'Abonar'); add.type = 'button';
+      var go = function(){ addPay(d, inp.value); };
+      add.addEventListener('click', go);
+      inp.addEventListener('keydown', function(ev){ if(ev.key === 'Enter'){ ev.preventDefault(); go(); } });
+      g.appendChild(w); g.appendChild(add);
+      card.appendChild(g);
+      var payAll = mk('button', 'chip', 'Pagar todo · ' + fmtAmt(left, d.cur)); payAll.type = 'button';
+      payAll.style.marginTop = '10px';
+      payAll.addEventListener('click', function(){ addPay(d, left); });
+      card.appendChild(payAll);
+    }
+
+    if(d.pays.length){
+      var pl = mk('div'); pl.style.marginTop = '12px';
+      d.pays.slice().reverse().forEach(function(p){
+        var row = mk('div', 'dpay');
+        row.appendChild(mk('span', '', (p.date ? shortDay(p.date) + ' · ' : '') + fmtAmt(p.amount, d.cur)));
+        var x = mk('button', 'btn-del', 'Quitar'); x.type = 'button';
+        x.addEventListener('click', function(){
+          pushUndo('Abono eliminado');
+          d.pays = d.pays.filter(function(y){ return y.id !== p.id; });
+          saveDebts(); renderDebts();
+        });
+        row.appendChild(x);
+        pl.appendChild(row);
+      });
+      card.appendChild(pl);
+    }
+
+    var actions = mk('div', 'form-actions');
+    var del = mk('button', 'btn-del', 'Eliminar'); del.type = 'button';
+    del.addEventListener('click', function(){
+      pushUndo('Deuda eliminada');
+      debts = debts.filter(function(x){ return x.id !== d.id; });
+      dOpen = null;
+      saveDebts(); renderDebts();
+    });
+    var close = mk('button', 'btn-done', 'Cerrar'); close.type = 'button';
+    close.addEventListener('click', function(){ dOpen = null; renderDebts(); });
+    actions.appendChild(del); actions.appendChild(close);
+    card.appendChild(actions);
+    return card;
+  }
+
+  function debtRow(d){
+    var paid = isPaid(d), left = leftOf(d);
+    var clr = paid ? '' : (d.kind === 'owed' ? 'gain' : 'loss');
+    if(dOpen === d.id) return debtCard(d, paid, left, clr);
+    var b = mk('button', 'ent' + (paid ? ' dpaid' : '')); b.type = 'button';
+    var main = mk('div', 'ent-main');
+    main.appendChild(mk('strong', '', d.person));
+    var parts = [];
+    if(d.note) parts.push(d.note);
+    if(paid) parts.push('Pagada'); else if(d.due) parts.push('vence ' + shortDay(d.due));
+    if(parts.length) main.appendChild(mk('small', '', parts.join(' · ')));
+    var right = mk('div', 'ent-right');
+    right.appendChild(mk('span', 'ent-amt ' + clr, fmtAmt(paid ? d.amount : left, d.cur)));
+    if(!paid && d.pays.length) right.appendChild(mk('span', 'ent-sub', 'de ' + fmtAmt(d.amount, d.cur)));
+    if(isLate(d)) right.appendChild(mk('span', 'pill down', 'Vencida'));
+    b.appendChild(main); b.appendChild(right);
+    b.addEventListener('click', function(){ dOpen = d.id; renderDebts(); });
+    return b;
+  }
+
+  function renderDebts(){
+    var to = pendingBy('owed'), tw = pendingBy('owe');
+    byId('dOwedAmt').textContent = totText(to);
+    byId('dOweAmt').textContent = totText(tw);
+    [['dOwedEq', to], ['dOweEq', tw]].forEach(function(p){
+      var eq = cupEq(p[1]), n = byId(p[0]);
+      n.hidden = eq == null;
+      if(eq != null) n.textContent = '≈ ' + fmtAmt(eq, 'CUP');
+    });
+    Array.prototype.forEach.call(byId('dSeg').children, function(b){
+      b.classList.toggle('on', b.getAttribute('data-k') === dKind);
+    });
+    var host = byId('dList');
+    host.innerHTML = '';
+    var mine = debts.filter(function(d){ return d.kind === dKind; });
+    var pend = mine.filter(function(d){ return !isPaid(d); }).sort(function(a, b){
+      if(!!a.due !== !!b.due) return a.due ? -1 : 1;
+      return a.due < b.due ? -1 : (a.due > b.due ? 1 : 0);
+    });
+    var done = mine.filter(isPaid);
+    if(!pend.length && !done.length){
+      var box = mk('div', 'empty');
+      box.innerHTML = dKind === 'owed' ? 'Nadie te debe nada por ahora.<br>Toca <b>+ Nueva deuda</b> para anotar una.' : 'No tienes deudas pendientes.<br>Toca <b>+ Nueva deuda</b> para anotar una.';
+      host.appendChild(box);
+      return;
+    }
+    pend.forEach(function(d){ host.appendChild(debtRow(d)); });
+    if(done.length){
+      host.appendChild(mk('div', 'label dsec', 'Pagadas (' + done.length + ')'));
+      done.forEach(function(d){ host.appendChild(debtRow(d)); });
+    }
+  }
+
+  function setFormKind(k){
+    dFormK = k;
+    Array.prototype.forEach.call(byId('dFormKind').children, function(b){
+      b.classList.toggle('on', b.getAttribute('data-k') === k);
+    });
+  }
+  function closeDebtForm(){ byId('dForm').hidden = true; }
+  function openDebtForm(){
+    if(view !== 'debts') showView('debts');
+    dOpen = null;
+    setFormKind(dKind);
+    byId('dPerson').value = ''; byId('dNote').value = ''; byId('dAmt').value = ''; byId('dDue').value = '';
+    byId('dCur').value = dLastCur;
+    byId('dForm').hidden = false;
+    renderDebts();
+    byId('dForm').scrollIntoView({behavior: 'smooth', block: 'center'});
+    byId('dPerson').focus({preventScroll: true});
+  }
+  function saveDebtForm(){
+    var person = byId('dPerson').value.trim(), amount = r2(byId('dAmt').value);
+    if(!person){ byId('dPerson').focus(); toast('Escribe el nombre de la persona'); return; }
+    if(amount <= 0){ byId('dAmt').focus(); toast('Escribe el monto'); return; }
+    var cur = byId('dCur').value;
+    debts.push({id: uid(), kind: dFormK, person: person, note: byId('dNote').value.trim(), amount: amount,
+      cur: CURS.indexOf(cur) >= 0 ? cur : 'CUP', date: todayStr(), due: byId('dDue').value || '', pays: []});
+    dLastCur = cur;
+    dKind = dFormK;
+    closeDebtForm();
+    saveDebts(); renderDebts();
+    toast('Deuda agregada');
+  }
+  byId('dNew').addEventListener('click', openDebtForm);
+  byId('dSave').addEventListener('click', saveDebtForm);
+  byId('dCancel').addEventListener('click', closeDebtForm);
+  ['dPerson', 'dNote', 'dAmt'].forEach(function(id){
+    byId(id).addEventListener('keydown', function(ev){ if(ev.key === 'Enter'){ ev.preventDefault(); saveDebtForm(); } });
+  });
+  Array.prototype.forEach.call(byId('dSeg').children, function(b){
+    b.addEventListener('click', function(){ dKind = b.getAttribute('data-k'); dOpen = null; renderDebts(); });
+  });
+  Array.prototype.forEach.call(byId('dFormKind').children, function(b){
+    b.addEventListener('click', function(){ setFormKind(b.getAttribute('data-k')); });
+  });
+
+  /* ---------- Modo online: tasas de cambio (elTOQUE) ---------- */
+  var TKEY = 'tasas_cfg_v1', RKEY = 'tasas_cache_v1', tcfg = {on: false, token: ''}, rcache = null, rBusy = false, rErr = '';
+  var RATE_INFO = [{c: 'USD', n: 'Dólar'}, {c: 'EUR', n: 'Euro'}, {c: 'MLC', n: 'MLC'}];
+  try {
+    var _tc = JSON.parse(localStorage.getItem(TKEY));
+    if(isObj(_tc)){ tcfg.on = !!_tc.on; tcfg.token = String(_tc.token || '').trim(); }
+  } catch(e) {}
+  try {
+    var _rc = JSON.parse(localStorage.getItem(RKEY));
+    if(isObj(_rc) && isObj(_rc.rates) && num(_rc.at) > 0) rcache = {at: num(_rc.at), rates: _rc.rates};
+  } catch(e) {}
+  function saveTcfg(){ try { localStorage.setItem(TKEY, JSON.stringify(tcfg)); } catch(e) {} }
+  function saveRcache(){ try { localStorage.setItem(RKEY, JSON.stringify(rcache)); } catch(e) {} }
+
+  // Tasas utilizables (CUP por unidad) solo si el modo online está encendido y hay datos guardados.
+  function ratesNow(){
+    if(!tcfg.on || !rcache) return null;
+    var r = {}, any = false;
+    RATE_INFO.forEach(function(x){
+      var v = num(rcache.rates[x.c]);
+      if(v > 0){ r[x.c] = v; any = true; }
+    });
+    return any ? r : null;
+  }
+  function fmtRate(v, dec){ return v.toLocaleString('es', {maximumFractionDigits: dec || 2}); }
+  function whenText(ms){
+    return new Date(ms).toLocaleString('es', {day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit'}).replace('.', '');
+  }
+  // El API de elTOQUE pide un intervalo menor a 24 h con formato "AAAA-MM-DD HH:MM:SS" (hora de Cuba).
+  function havanaStamp(ms){
+    var d = new Date(ms);
+    try {
+      var o = {};
+      new Intl.DateTimeFormat('en-CA', {timeZone: 'America/Havana', year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23'}).formatToParts(d).forEach(function(p){ o[p.type] = p.value; });
+      return o.year + '-' + o.month + '-' + o.day + ' ' + o.hour + ':' + o.minute + ':' + o.second;
+    } catch(e) {
+      return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    }
+  }
+
+  function refreshRates(){
+    if(!tcfg.on || !tcfg.token){ renderRates(); return Promise.resolve(); }
+    if(rBusy) return Promise.resolve();
+    rBusy = true; rErr = '';
+    renderRates();
+    var now = Date.now();
+    var url = 'https://tasas.eltoque.com/v1/trmi?date_from=' + encodeURIComponent(havanaStamp(now - 20 * 3600 * 1000)) +
+      '&date_to=' + encodeURIComponent(havanaStamp(now));
+    var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timer = setTimeout(function(){ if(ctl) ctl.abort(); }, 15000);
+    return fetch(url, {headers: {'Authorization': 'Bearer ' + tcfg.token, 'Accept': 'application/json'}, signal: ctl ? ctl.signal : undefined})
+      .then(function(r){
+        if(r.status === 401 || r.status === 403) throw new Error('auth');
+        if(r.status === 429) throw new Error('limit');
+        if(!r.ok) throw new Error('http');
+        return r.json();
+      })
+      .then(function(j){
+        var t = j && j.tasas, rates = {};
+        if(!isObj(t)) throw new Error('shape');
+        var u = num(t.USD), e = num(t.ECU != null ? t.ECU : t.EUR), m = num(t.MLC);
+        if(u > 0) rates.USD = u;
+        if(e > 0) rates.EUR = e;
+        if(m > 0) rates.MLC = m;
+        if(!Object.keys(rates).length) throw new Error('empty');
+        rcache = {at: Date.now(), rates: rates};
+        saveRcache();
+      })
+      .catch(function(err){
+        var m = err && err.message;
+        if(m === 'auth') rErr = 'El token no es válido o ya venció. Revísalo en Ajustes → Modo online.';
+        else if(m === 'limit') rErr = 'Hiciste demasiadas consultas. Espera un momento e intenta de nuevo.';
+        else if(m === 'empty') rErr = 'elTOQUE no devolvió tasas en este momento.';
+        else if(m === 'http' || m === 'shape') rErr = 'elTOQUE respondió con un error. Intenta más tarde.';
+        else if(err && err.name === 'AbortError') rErr = 'elTOQUE tardó demasiado en responder.';
+        else rErr = 'No se pudo conectar con elTOQUE. Revisa tu internet (el navegador también puede haber bloqueado la consulta).';
+      })
+      .then(function(){
+        clearTimeout(timer);
+        rBusy = false;
+        renderRates(); renderDebts();
+        setOnMsg();
+      });
+  }
+  function ratesOnShow(){
+    if(tcfg.on && tcfg.token && (!rcache || Date.now() - rcache.at > 15 * 60 * 1000)) refreshRates();
+  }
+
+  function calcRates(){
+    var r = ratesNow(), out = byId('rtOut');
+    out.innerHTML = '';
+    if(!r) return;
+    var c = byId('rtCur').value, v = r[c], a = num(byId('rtAmt').value);
+    if(!v) return;
+    var l1 = mk('div'); l1.appendChild(document.createTextNode(fmtRate(a) + ' ' + c + ' = ')); l1.appendChild(mk('b', '', fmtRate(a * v) + ' CUP'));
+    var l2 = mk('div'); l2.appendChild(document.createTextNode(fmtRate(a) + ' CUP = ')); l2.appendChild(mk('b', '', fmtRate(a / v, 4) + ' ' + c));
+    out.appendChild(l1); out.appendChild(l2);
+  }
+  byId('rtAmt').addEventListener('input', calcRates);
+  byId('rtCur').addEventListener('change', calcRates);
+
+  function renderRates(){
+    byId('valOnline').textContent = tcfg.on ? 'Encendido' : 'Apagado';
+    var host = byId('rtBody'), calc = byId('rtCalc');
+    host.innerHTML = '';
+    calc.hidden = true;
+    if(!tcfg.on || !tcfg.token){
+      var box = mk('div', 'empty');
+      box.innerHTML = tcfg.on ? 'Falta tu <b>token</b> de elTOQUE.' : 'El <b>modo online</b> está apagado.<br>Actívalo para ver las tasas de cambio.';
+      host.appendChild(box);
+      var go = mk('button', 'btn-wide sec', 'Ir a Modo online'); go.type = 'button';
+      go.addEventListener('click', function(){ openSettingsAt('online'); });
+      host.appendChild(go);
+      return;
+    }
+    var top = mk('div', 'rt-top');
+    top.appendChild(mk('small', '', rBusy ? 'Actualizando…' : (rcache ? 'Consultado: ' + whenText(rcache.at) : 'Sin datos todavía')));
+    var rf = mk('button', 'chip', 'Actualizar'); rf.type = 'button'; rf.disabled = rBusy;
+    rf.addEventListener('click', function(){ refreshRates(); });
+    top.appendChild(rf);
+    host.appendChild(top);
+    if(rErr) host.appendChild(mk('div', 'rt-err', rErr + (ratesNow() ? ' Se muestran las últimas tasas guardadas.' : '')));
+    var r = ratesNow();
+    if(!r) return;
+    RATE_INFO.forEach(function(x){
+      if(!r[x.c]) return;
+      var row = mk('div', 'ent rt-rate');
+      var main = mk('div', 'ent-main');
+      main.appendChild(mk('strong', '', x.n + ' (' + x.c + ')'));
+      main.appendChild(mk('small', '', '1 ' + x.c));
+      var right = mk('div', 'ent-right');
+      right.appendChild(mk('span', 'ent-amt', fmtRate(r[x.c]) + ' CUP'));
+      row.appendChild(main); row.appendChild(right);
+      host.appendChild(row);
+    });
+    calc.hidden = false;
+    calcRates();
+  }
+
+  // Panel de Ajustes → Modo online
+  function setOnMsg(){
+    var m = byId('onMsg');
+    m.className = 'onmsg';
+    if(!tcfg.on) m.textContent = 'Modo online apagado: la app funciona sin conexión.';
+    else if(!tcfg.token) m.textContent = 'Pega tu token y toca Guardar y actualizar.';
+    else if(rBusy) m.textContent = 'Actualizando…';
+    else if(rErr){ m.textContent = rErr; m.classList.add('err'); }
+    else if(rcache){ m.textContent = 'Listo. Última consulta: ' + whenText(rcache.at) + '.'; m.classList.add('ok'); }
+    else m.textContent = '';
+  }
+  function loadOnlinePanel(){
+    Array.prototype.forEach.call(byId('onSeg').children, function(b){
+      b.classList.toggle('on', (b.getAttribute('data-on') === '1') === tcfg.on);
+    });
+    byId('onToken').value = tcfg.token;
+    setOnMsg();
+  }
+  Array.prototype.forEach.call(byId('onSeg').children, function(b){
+    b.addEventListener('click', function(){
+      tcfg.on = b.getAttribute('data-on') === '1';
+      saveTcfg(); loadOnlinePanel(); renderRates(); renderDebts();
+      if(tcfg.on && tcfg.token) ratesOnShow();
+    });
+  });
+  function saveOnline(){
+    var tk = byId('onToken').value.trim().replace(/^bearer\s+/i, '');
+    if(!tk){ byId('onToken').focus(); toast('Pega tu token'); return; }
+    tcfg.token = tk; tcfg.on = true;
+    saveTcfg(); loadOnlinePanel(); renderRates();
+    refreshRates();
+  }
+  byId('onSave').addEventListener('click', saveOnline);
+  byId('onToken').addEventListener('keydown', function(ev){ if(ev.key === 'Enter'){ ev.preventDefault(); saveOnline(); } });
+
   /* ---------- Deslizar para cambiar de opción ---------- */
-  var ORDER = ['today', 'history', 'expenses'];
-  var SECS = {today: $viewToday, history: $viewHist, expenses: $viewExp};
+  var ORDER = ['today', 'history', 'expenses', 'debts', 'rates'];
+  var SECS = {today: $viewToday, history: $viewHist, expenses: $viewExp, debts: byId('viewDebt'), rates: byId('viewRates')};
   var sx = 0, sy = 0, st0 = 0, swipe = false;
   document.addEventListener('touchstart', function(e){
     var t = e.touches[0];
-    swipe = e.touches.length === 1 && !(e.target.closest && e.target.closest('.chart-wrap, input, .modal'));
+    swipe = e.touches.length === 1 && !(e.target.closest && e.target.closest('.chart-wrap, input, select, .modal'));
     sx = t.clientX; sy = t.clientY; st0 = Date.now();
   }, {passive: true});
   document.addEventListener('touchend', function(e){
@@ -2386,6 +2965,8 @@
   }, {passive: true});
 
   renderAll();
+  if(tcfg.on && tcfg.token) ratesOnShow();
+  window.addEventListener('online', ratesOnShow);
 })();
 
 if('serviceWorker' in navigator){
