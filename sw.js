@@ -1,4 +1,4 @@
-var CACHE = 'ganancias-v1';
+var CACHE = 'admmo-v2';
 var FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', function(e){
