@@ -190,11 +190,11 @@
   #qList .ent{cursor:default}
   .toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:50;background:var(--text);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:.85rem;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.35);max-width:90vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .panel[hidden]{display:none}
-  .set-item{display:flex;align-items:center;gap:10px;width:100%;background:var(--surface);color:var(--text);border:0;border-radius:14px;padding:15px 14px;margin-bottom:8px;font-size:.95rem;font-weight:600;text-align:left;cursor:pointer;box-shadow:var(--shadow)}
-  .set-item span{flex:1}
+  .set-item,.g-item{display:flex;align-items:center;gap:10px;width:100%;background:var(--surface);color:var(--text);border:0;border-radius:14px;padding:15px 14px;margin-bottom:8px;font-size:.95rem;font-weight:600;text-align:left;cursor:pointer;box-shadow:var(--shadow)}
+  .set-item span,.g-item span{flex:1}
   .set-item small{color:var(--muted);font-size:.75rem;font-weight:600}
-  .set-item b{color:var(--muted);font-size:1.2rem;font-weight:400;line-height:1}
-  .set-item:active{background:var(--surface2)}
+  .set-item b,.g-item b{color:var(--muted);font-size:1.2rem;font-weight:400;line-height:1}
+  .set-item:active,.g-item:active{background:var(--surface2)}
   a.lnk{color:inherit;text-decoration:none;display:block}
   #lList .ent{cursor:default}
 
@@ -229,6 +229,39 @@
   }
   .av-big{border-width:4px}
   @media (prefers-reduced-motion:reduce){.fab,#pnlAccount .chip,#pnlAccount .btn-done,#pnlAccount .btn-wide,.avatar,.av-big{animation:none}}
+  /* Guía */
+  .guide-btn{position:absolute;left:0;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:2px solid var(--line);background:var(--chip);color:var(--chipx);padding:0;display:grid;place-items:center;cursor:pointer}
+  .guide-btn svg{width:22px;height:22px}
+  .gd{display:block;font-style:normal;font-size:.75rem;font-weight:500;color:var(--muted);margin-top:2px}
+  .gp{font-size:.88rem;line-height:1.5;margin:0 0 10px}
+  .gp b{font-weight:700}
+  .rgb-title{font-size:1.55rem;font-weight:800;letter-spacing:.02em;line-height:1.3;margin:2px 0 12px;word-break:break-word}
+  .rgb-code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;line-height:1.7;background:var(--surface);border-radius:14px;padding:12px;margin:0 0 12px;word-break:break-word;box-shadow:var(--shadow)}
+  .rgb-code span,.hex-row code{font-weight:800;text-shadow:0 0 1px rgba(0,0,0,.4)}
+  .hex-row{display:flex;align-items:center;gap:10px;width:100%;background:var(--surface);color:var(--text);border:0;border-radius:14px;padding:11px 14px;margin-bottom:8px;text-align:left;cursor:pointer;box-shadow:var(--shadow)}
+  .hex-row i{width:26px;height:26px;border-radius:50%;flex:none;border:1px solid rgba(128,128,128,.4)}
+  .hex-row code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1rem}
+  .hex-row small{margin-left:auto;color:var(--muted);font-size:.75rem;font-weight:600}
+  .hex-group{font-size:.85rem;font-weight:700;margin:16px 0 8px}
+  .hex-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .hex-grid .hex-row{margin:0;padding:9px 10px;gap:8px;min-width:0}
+  .hex-grid .hex-row i{width:24px;height:24px}
+  .hex-grid .hex-row div{min-width:0}
+  .hex-grid .hex-row code{font-size:.85rem;display:block}
+  .hex-grid .hex-row small{margin:0;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* Buscador del historial */
+  .search{margin-bottom:12px}
+  /* Editor de colores */
+  .cu-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .cu-row span{flex:1;font-weight:600;font-size:.92rem}
+  .cu-row code{font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--muted);font-size:.8rem}
+  .cu-row input[type=color]{width:56px;height:44px;padding:2px;border-radius:12px;border:1px solid var(--inputline);background:none;cursor:pointer}
+  .cu-pre{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+  .cu-pre button{width:34px;height:34px;border-radius:50%;border:2px solid rgba(128,128,128,.45);cursor:pointer;padding:0}
+  /* Deshacer */
+  .undo{position:fixed;left:50%;bottom:calc(142px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:14px;background:var(--text);color:var(--bg);padding:8px 8px 8px 18px;border-radius:999px;font-size:.85rem;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.35);max-width:92vw;white-space:nowrap}
+  .undo span{overflow:hidden;text-overflow:ellipsis}
+  .undo button{border:0;border-radius:999px;background:var(--blue);color:var(--onacc);font-weight:800;font-size:.82rem;padding:9px 16px;cursor:pointer}
   .btn-wide{display:block;width:100%;margin-top:10px;padding:13px;border-radius:14px;font-weight:700;font-size:.9rem;cursor:pointer;border:0}
   .btn-wide.pri{background:var(--blue);color:var(--onacc)}
   .btn-wide.sec{background:var(--chip);color:var(--chipx)}
@@ -243,6 +276,7 @@
   </div>
 
   <div class="top">
+    <button class="guide-btn" id="guideBtn" type="button" aria-label="Guía" title="Guía"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg></button>
     <h1>Mis Ganancias</h1>
     <button class="avatar" id="avatarBtn" type="button" aria-label="Mi cuenta"></button>
   </div>
@@ -304,6 +338,7 @@
   <section id="viewHist" hidden>
     <h1>Historial</h1>
     <div class="sub">Toca un día para abrirlo y editarlo.</div>
+    <input type="search" class="search" id="histSearch" placeholder="Buscar por fecha o descripción" autocomplete="off">
     <div id="histList"></div>
     <button class="btn-clear" id="clearHist" type="button" hidden>Borrar historial</button>
   </section>
@@ -374,6 +409,7 @@
       <button class="set-item" data-go="account" type="button"><span>Cuenta</span><small id="valAccount"></small><b>›</b></button>
       <button class="set-item" data-go="money" type="button"><span>Dinero que tengo</span><small id="valMoney"></small><b>›</b></button>
       <button class="set-item" data-go="theme" type="button"><span>Tema</span><small id="valTheme"></small><b>›</b></button>
+      <button class="set-item" data-go="colors" type="button"><span>Editor de colores</span><small id="valCustom"></small><b>›</b></button>
       <button class="set-item" data-go="quick" type="button"><span>Opción rápida</span><small id="valQuick"></small><b>›</b></button>
       <button class="set-item" data-go="links" type="button"><span>Accesos directos</span><small id="valLinks"></small><b>›</b></button>
     </div>
@@ -394,8 +430,9 @@
 
       <hr class="sep" style="margin:18px 0 14px">
       <div class="set-name">Importar y exportar</div>
-      <div class="sub" style="margin-bottom:6px">Exporta tu cuenta a un archivo que guarda toda la información: ganancias, gastos, dinero que tienes, perfil con foto, opciones rápidas, accesos directos y tema.</div>
+      <div class="sub" style="margin-bottom:6px">Exporta tu cuenta a un archivo que guarda toda la información: ganancias, gastos, dinero que tienes, perfil con foto, opciones rápidas, accesos directos y tema. También puedes sacar una hoja de <b>Excel</b> con tus ganancias y gastos.</div>
       <button class="btn-wide pri" id="bkExport" type="button">Exportar cuenta</button>
+      <button class="btn-wide sec" id="bkExcel" type="button">Exportar a Excel</button>
       <button class="btn-wide sec" id="bkImport" type="button">Importar cuenta</button>
       <input type="file" id="bkFile" accept=".json,application/json" hidden>
       <div class="sub" style="margin:12px 0 0;font-size:.78rem">Al importar, se reemplaza toda la información actual por la del archivo.</div>
@@ -408,6 +445,15 @@
       <div class="form-actions" style="justify-content:flex-end">
         <button class="btn-done" id="mnSave" type="button">Guardar</button>
       </div>
+    </div>
+
+    <div class="panel" id="pnlColors" hidden>
+      <div class="sub" style="margin-bottom:14px">Crea tu propio tema: elige el color de fondo y el de acento. Se guarda solo y también se incluye al exportar tu cuenta.</div>
+      <div class="cu-row"><span>Fondo</span><code id="cuBgHex"></code><input type="color" id="cuBg" aria-label="Color de fondo"></div>
+      <div class="cu-pre" id="cuBgPre"></div>
+      <div class="cu-row"><span>Acento</span><code id="cuAcHex"></code><input type="color" id="cuAc" aria-label="Color de acento"></div>
+      <div class="cu-pre" id="cuAcPre"></div>
+      <button class="btn-clear" id="cuReset" type="button">Restablecer colores</button>
     </div>
 
     <div class="panel" id="pnlTheme" hidden>
@@ -458,6 +504,71 @@
   </div>
 </div>
 
+<div class="modal" id="guide" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="gTitle">
+    <div class="sheet-head">
+      <button class="x" id="gBack" type="button" aria-label="Volver" hidden>‹</button>
+      <h2 id="gTitle">Guía</h2>
+      <button class="x" id="gClose" type="button" aria-label="Cerrar">×</button>
+    </div>
+
+    <div class="panel" id="gpMain">
+      <button class="g-item" data-gg="colors" type="button"><span>Colores RGB<em class="gd">Los colores hexadecimales del botón + y del perfil</em></span><b>›</b></button>
+      <button class="g-item" data-gg="home" type="button"><span>Inicio y Historial<em class="gd">Cómo registrar ganancias y ver tus días</em></span><b>›</b></button>
+      <button class="g-item" data-gg="expenses" type="button"><span>Gastos<em class="gd">Anota lo que gastas</em></span><b>›</b></button>
+      <button class="g-item" data-gg="money" type="button"><span>Dinero que tengo<em class="gd">Tu saldo, siempre al día</em></span><b>›</b></button>
+      <button class="g-item" data-gg="quick" type="button"><span>Opción rápida y accesos<em class="gd">Atajos para ahorrar toques</em></span><b>›</b></button>
+      <button class="g-item" data-gg="more" type="button"><span>Buscar, deshacer y Excel<em class="gd">Funciones para ahorrar tiempo</em></span><b>›</b></button>
+      <button class="g-item" data-gg="account" type="button"><span>Cuenta y copia de seguridad<em class="gd">Foto, nombre, importar y exportar</em></span><b>›</b></button>
+    </div>
+
+    <div class="panel" id="gpColors" hidden>
+      <div class="rgb-title" id="rgbTitle" aria-label="Colores hexadecimales RGB"></div>
+      <p class="gp">Estos son los colores <b>hexadecimales</b> del efecto RGB animado. Se usan en el <b>botón +</b>, en el <b>aro de la foto de perfil</b> y en los <b>botones de Cuenta</b>.</p>
+      <div class="rgb-code" id="rgbCode"></div>
+      <div id="hexList"></div>
+      <div class="set-name" style="margin-top:18px">Más colores</div>
+      <p class="gp" style="color:var(--muted);font-size:.8rem">Una lista de colores comunes para inspirarte.</p>
+      <div id="hexMore"></div>
+      <p class="gp" style="color:var(--muted);font-size:.78rem;margin-top:12px">Toca un color para copiar su código.</p>
+    </div>
+
+    <div class="panel" id="gpHome" hidden>
+      <p class="gp"><b>Inicio:</b> toca el botón <b>+</b> para crear una ganancia con el dinero recaudado y la cantidad vendida. Arriba ves el total del día y el total ganado.</p>
+      <p class="gp"><b>Historial:</b> revisa tus días anteriores y las gráficas de lo que has ganado.</p>
+      <p class="gp"><b>Moverte rápido:</b> desliza la pantalla hacia los lados para cambiar entre Inicio, Historial y Gastos.</p>
+    </div>
+
+    <div class="panel" id="gpExpenses" hidden>
+      <p class="gp">En la pestaña <b>Gastos</b> escribes una descripción (opcional) y cuánto gastaste, y tocas <b>Agregar</b>.</p>
+      <p class="gp">Lo gastado se resta de tus ganancias y también del <b>dinero que tienes</b>.</p>
+    </div>
+
+    <div class="panel" id="gpMoney" hidden>
+      <p class="gp">Se ve arriba de todo, sobre "Mis Ganancias". Para cambiarlo ve a <b>Ajustes → Dinero que tengo</b> y escribe cuánto tienes ahora.</p>
+      <p class="gp">Desde ahí se actualiza solo: suma tus ganancias y resta tus gastos.</p>
+    </div>
+
+    <div class="panel" id="gpQuick" hidden>
+      <p class="gp"><b>Opción rápida:</b> en Ajustes creas botones que agregan una ganancia al día con un solo toque.</p>
+      <p class="gp"><b>Accesos directos:</b> guarda páginas web en Ajustes para abrirlas con un toque.</p>
+    </div>
+
+    <div class="panel" id="gpMore" hidden>
+      <p class="gp"><b>Buscar en el Historial:</b> escribe una fecha (por ejemplo "oct" o "2026-10-22") o una descripción y solo verás los días que coincidan.</p>
+      <p class="gp"><b>Deshacer:</b> al borrar una ganancia, un gasto, un día, el historial, una opción rápida o un acceso, aparece un aviso con el botón <b>Deshacer</b> por unos segundos.</p>
+      <p class="gp"><b>Editor de colores:</b> en Ajustes eliges tu propio color de fondo y de acento.</p>
+      <p class="gp"><b>Excel:</b> en Ajustes → Cuenta, el botón <b>Exportar a Excel</b> crea un archivo .xlsx con las hojas Resumen, Ganancias y Gastos.</p>
+    </div>
+
+    <div class="panel" id="gpAccount" hidden>
+      <p class="gp">En <b>Ajustes → Cuenta</b> pones tu nombre y una foto de perfil, que aparece arriba a la derecha.</p>
+      <p class="gp">Ahí mismo puedes <b>exportar</b> toda tu información a un archivo y <b>importarla</b> después, por ejemplo en otro teléfono. Al importar se reemplaza lo que hay.</p>
+    </div>
+  </div>
+</div>
+
+<div class="undo" id="undoBar" hidden><span id="undoMsg"></span><button id="undoBtn" type="button">Deshacer</button></div>
 <div class="toast" id="toast" hidden></div>
 
 <script>
@@ -669,6 +780,19 @@
   }
 
   /* ---------- Historial de días ---------- */
+  function norm(t){
+    var x = String(t || '').toLowerCase();
+    try { x = x.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); } catch(e) {}
+    return x.replace(/\./g, '').trim();
+  }
+  function dayHaystack(d){
+    var dt = parseDay(d), parts = [d, d.split('-').reverse().join('/')];
+    parts.push(dt.toLocaleDateString('es', {weekday:'long', day:'numeric', month:'long', year:'numeric'}));
+    parts.push(dt.toLocaleDateString('es', {weekday:'short', day:'numeric', month:'short'}));
+    listFor(d).forEach(function(e){ if(!isBlank(e)) parts.push(parseTag(e.name).text || ''); });
+    expList(d).forEach(function(x){ parts.push(parseTag(x.name).text || ''); });
+    return norm(parts.join(' | '));
+  }
   function renderHistoryList(rows){
     byId('clearHist').hidden = !rows.length;
     var host = byId('histList');
@@ -679,6 +803,21 @@
       box.textContent = 'Todavía no hay días registrados.';
       host.appendChild(box);
       return;
+    }
+    var q = norm(byId('histSearch').value);
+    if(q){
+      var words = q.split(/\s+/);
+      rows = rows.filter(function(r){
+        var h = dayHaystack(r.date);
+        return words.every(function(w){ return h.indexOf(w) !== -1; });
+      });
+      if(!rows.length){
+        var nb = document.createElement('div');
+        nb.className = 'empty';
+        nb.textContent = 'No se encontró ningún día con eso.';
+        host.appendChild(nb);
+        return;
+      }
     }
     var today = todayStr();
     rows.slice().reverse().forEach(function(r){
@@ -824,6 +963,7 @@
     var del = document.createElement('button');
     del.type = 'button'; del.className = 'btn-del'; del.textContent = 'Eliminar';
     del.addEventListener('click', function(){
+      pushUndo('Ganancia eliminada');
       entries = entries.filter(function(x){ return x.id !== e.id; });
       editingId = null;
       save(); renderAll();
@@ -853,6 +993,7 @@
       reset.type = 'button'; reset.className = 'link-danger'; reset.textContent = 'Borrar todo el día';
       reset.addEventListener('click', function(){
         if(confirm('¿Borrar todas las ganancias de este día?')){
+          pushUndo('Día borrado');
           entries = []; editingId = null; save(); renderAll();
         }
       });
@@ -937,6 +1078,45 @@
 
   var THEME_KEY = 'ganancias_tema';
   var THEME_BG = {azul:'#071c4f', negro:'#0b0b0d', rojo:'#4a0a12', verde:'#084a28', amarillo:'#ffe97a', blanco:'#eef3ff'};
+  var CKEY = 'colores_custom_v1', HEXRE = /^#[0-9a-f]{6}$/i;
+  var custom = {bg:'#1b1033', accent:'#ff2d55'};
+  try {
+    var cs = JSON.parse(localStorage.getItem(CKEY));
+    if(cs && HEXRE.test(cs.bg)) custom.bg = cs.bg;
+    if(cs && HEXRE.test(cs.accent)) custom.accent = cs.accent;
+  } catch(e) {}
+  THEME_BG.custom = custom.bg;
+  var CVARS = ['--bg','--grad','--nav','--blue','--blue-l','--onacc','--chip','--chipx','--text','--muted','--surface','--surface2','--line','--input','--inputline','--form','--up','--down','--upx','--downx','--flat','--axis','--shadow','color-scheme'];
+  function rgbOf(h){ var n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+  function mixHex(a, b, t){
+    var x = rgbOf(a), y = rgbOf(b);
+    return '#' + [0,1,2].map(function(i){ var v = Math.round(x[i] + (y[i] - x[i]) * t); return (v < 16 ? '0' : '') + v.toString(16); }).join('');
+  }
+  function rgba(h, a){ var c = rgbOf(h); return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
+  function applyCustomVars(){
+    var bg = custom.bg, ac = custom.accent, light = lum(bg) > .6, st = document.documentElement.style;
+    var v = {
+      '--bg': bg,
+      '--grad': 'linear-gradient(180deg,' + (light ? mixHex(bg, '#ffffff', .6) : mixHex(bg, '#ffffff', .1)) + ' 0%,' + bg + ' 55%,' + (light ? mixHex(bg, '#000000', .08) : mixHex(bg, '#000000', .45)) + ' 100%)',
+      '--nav': rgba(bg, .96),
+      '--blue': ac,
+      '--blue-l': light ? mixHex(ac, '#000000', .25) : mixHex(ac, '#ffffff', .35),
+      '--onacc': lum(ac) > .55 ? '#111111' : '#ffffff',
+      '--chip': rgba(ac, light ? .16 : .2),
+      '--chipx': light ? mixHex(ac, '#000000', .4) : mixHex(ac, '#ffffff', .6)
+    };
+    if(light){
+      v['--text'] = '#16181d'; v['--muted'] = 'rgba(22,24,29,.6)'; v['--surface'] = 'rgba(255,255,255,.7)';
+      v['--surface2'] = 'rgba(0,0,0,.07)'; v['--line'] = 'rgba(0,0,0,.12)'; v['--input'] = 'rgba(255,255,255,.8)';
+      v['--inputline'] = 'rgba(0,0,0,.2)'; v['--form'] = 'rgba(255,255,255,.85)'; v['--up'] = '#168a4a'; v['--down'] = '#d12f3f';
+      v['--upx'] = '#0f7a3f'; v['--downx'] = '#b82233'; v['--flat'] = '#7a7f8a'; v['--axis'] = 'rgba(0,0,0,.18)';
+      v['--shadow'] = '0 1px 3px rgba(0,0,0,.12)'; v['color-scheme'] = 'light';
+    }
+    CVARS.forEach(function(k){ if(v[k] != null) st.setProperty(k, v[k]); else st.removeProperty(k); });
+  }
+  function clearCustomVars(){ CVARS.forEach(function(k){ document.documentElement.style.removeProperty(k); }); }
+  function saveCustom(){ try { localStorage.setItem(CKEY, JSON.stringify(custom)); } catch(e) {} THEME_BG.custom = custom.bg; }
+
   var theme = 'azul';
   try {
     var stored = localStorage.getItem(THEME_KEY);
@@ -945,7 +1125,9 @@
   function applyTheme(t){
     theme = t;
     document.documentElement.setAttribute('data-theme', t);
-    byId('valTheme').textContent = cap(t);
+    if(t === 'custom') applyCustomVars(); else clearCustomVars();
+    byId('valTheme').textContent = t === 'custom' ? 'Personalizado' : cap(t);
+    byId('valCustom').textContent = t === 'custom' ? 'Activo' : '';
     var mt = document.querySelector('meta[name=theme-color]');
     if(mt) mt.setAttribute('content', THEME_BG[t]);
     Array.prototype.forEach.call(document.querySelectorAll('.sw'), function(b){
@@ -968,8 +1150,11 @@
     });
   });
 
+  byId('histSearch').addEventListener('input', function(){ renderHistoryList(buildRows()); });
+
   byId('clearHist').addEventListener('click', function(){
-    if(!confirm('¿Borrar todo el historial? Se eliminarán todos los días y ganancias registradas. No se puede deshacer.')) return;
+    if(!confirm('¿Borrar todo el historial? Se eliminarán todos los días, ganancias y gastos registrados.')) return;
+    pushUndo('Historial borrado');
     all = {}; entries = []; editingId = null; exps = {};
     save(); saveExp(); renderAll();
   });
@@ -998,6 +1183,7 @@
       amt.textContent = '−' + fmtMoney(num(x.money));
       var del = document.createElement('button'); del.type = 'button'; del.className = 'btn-del'; del.textContent = 'Eliminar';
       del.addEventListener('click', function(){
+        pushUndo('Gasto eliminado');
         exps[currentDate] = expList(currentDate).filter(function(y){ return y.id !== x.id; });
         saveExp(); renderAll();
       });
@@ -1090,6 +1276,7 @@
       });
       var del = document.createElement('button'); del.type = 'button'; del.className = 'btn-del'; del.textContent = 'Eliminar';
       del.addEventListener('click', function(){
+        pushUndo('Opción rápida eliminada');
         quickList = quickList.filter(function(x){ return x.id !== q.id; });
         if(qEdit === q.id) qReset();
         saveQuick(); renderQuick();
@@ -1166,6 +1353,7 @@
       });
       var del = document.createElement('button'); del.type = 'button'; del.className = 'btn-del'; del.textContent = 'Eliminar';
       del.addEventListener('click', function(){
+        pushUndo('Acceso eliminado');
         linkList = linkList.filter(function(x){ return x.id !== l.id; });
         if(lEdit === l.id) lReset();
         saveLinks(); renderLinks();
@@ -1299,21 +1487,22 @@
       app: 'mis-ganancias', version: 1, exported: new Date().toISOString(),
       data: {
         ganancias: all, gastos: exps, rapidas: quickList, accesos: linkList,
-        dinero_base: baseMoney, perfil: profile, tema: theme
+        dinero_base: baseMoney, perfil: profile, tema: theme, colores: custom
       }
     };
   }
 
   function exportAccount(){
     var json = JSON.stringify(buildBackup(), null, 2);
-    var fname = 'mis-ganancias-' + todayStr() + '.json';
-    var blob = new Blob([json], {type: 'application/json'});
+    deliverBlob(new Blob([json], {type: 'application/json'}), 'mis-ganancias-' + todayStr() + '.json');
+  }
+  function deliverBlob(blob, fname){
     var mobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     try {
-      var file = new File([blob], fname, {type: 'application/json'});
+      var file = new File([blob], fname, {type: blob.type});
       if(mobile && navigator.canShare && navigator.canShare({files: [file]})){
         navigator.share({files: [file], title: 'Mis Ganancias'}).then(function(){
-          toast('Cuenta exportada');
+          toast('Archivo exportado');
         }).catch(function(err){
           if(!err || err.name !== 'AbortError') downloadBlob(blob, fname);
         });
@@ -1328,7 +1517,7 @@
     a.href = url; a.download = fname;
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
-    toast('Cuenta exportada');
+    toast('Archivo exportado');
   }
 
   function isObj(x){ return x && typeof x === 'object' && !Array.isArray(x); }
@@ -1357,6 +1546,11 @@
     all = nAll; exps = nExp; quickList = nQuick; linkList = nLinks; baseMoney = nBase; profile = nProf;
     editingId = null;
     entries = all[currentDate] || [];
+    if(isObj(d.colores)){
+      if(HEXRE.test(d.colores.bg)) custom.bg = d.colores.bg;
+      if(HEXRE.test(d.colores.accent)) custom.accent = d.colores.accent;
+      saveCustom();
+    }
     if(THEME_BG[d.tema]) theme = d.tema;
 
     try {
@@ -1372,6 +1566,159 @@
     applyTheme(theme);
     renderQuick(); renderLinks(); renderProfile(); renderAll();
   }
+
+  /* ---------- Exportar a Excel (.xlsx) ---------- */
+  function xe(t){ return String(t).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, ''); }
+  function sheetXml(rows, widths){
+    var x = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols>';
+    widths.forEach(function(w, i){ x += '<col min="' + (i+1) + '" max="' + (i+1) + '" width="' + w + '" customWidth="1"/>'; });
+    x += '</cols><sheetData>';
+    rows.forEach(function(r, ri){
+      x += '<row r="' + (ri+1) + '">';
+      r.forEach(function(c, ci){
+        var ref = String.fromCharCode(65 + ci) + (ri+1), bold = (ri === 0 || (r.bold)) ? ' s="1"' : '';
+        if(typeof c === 'number') x += '<c r="' + ref + '"' + bold + '><v>' + c + '</v></c>';
+        else x += '<c r="' + ref + '" t="inlineStr"' + bold + '><is><t xml:space="preserve">' + xe(c) + '</t></is></c>';
+      });
+      x += '</row>';
+    });
+    return x + '</sheetData></worksheet>';
+  }
+  function crc32(u8){
+    var t = crc32.t;
+    if(!t){ t = crc32.t = []; for(var n = 0; n < 256; n++){ var c = n; for(var k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } }
+    var crc = 0xFFFFFFFF;
+    for(var i = 0; i < u8.length; i++) crc = t[(crc ^ u8[i]) & 255] ^ (crc >>> 8);
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+  function zipStore(files){
+    var enc = new TextEncoder(), parts = [], central = [], offset = 0;
+    files.forEach(function(f){
+      var nm = enc.encode(f.name), data = enc.encode(f.text), crc = crc32(data), sz = data.length;
+      var lh = new DataView(new ArrayBuffer(30));
+      lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true);
+      lh.setUint16(12, 0x21, true); lh.setUint32(14, crc, true); lh.setUint32(18, sz, true); lh.setUint32(22, sz, true);
+      lh.setUint16(26, nm.length, true);
+      parts.push(new Uint8Array(lh.buffer), nm, data);
+      var ch = new DataView(new ArrayBuffer(46));
+      ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true);
+      ch.setUint16(14, 0x21, true); ch.setUint32(16, crc, true); ch.setUint32(20, sz, true); ch.setUint32(24, sz, true);
+      ch.setUint16(28, nm.length, true); ch.setUint32(42, offset, true);
+      central.push(new Uint8Array(ch.buffer), nm);
+      offset += 30 + nm.length + sz;
+    });
+    var csize = 0; central.forEach(function(c){ csize += c.length; });
+    var end = new DataView(new ArrayBuffer(22));
+    end.setUint32(0, 0x06054b50, true); end.setUint16(8, files.length, true); end.setUint16(10, files.length, true);
+    end.setUint32(12, csize, true); end.setUint32(16, offset, true);
+    return new Blob(parts.concat(central, [new Uint8Array(end.buffer)]), {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  }
+  function exportExcel(){
+    save();
+    var rows = buildRows(), net = 0, gan = 0, gas = 0, obj = 0;
+    var sum = [['Fecha', 'Ganado ($)', 'Gastado ($)', 'Neto ($)', 'Objetos']];
+    rows.forEach(function(r){
+      sum.push([r.date, Math.round(r.money + r.spent), Math.round(r.spent), Math.round(r.money), Math.round(r.items)]);
+      gan += r.money + r.spent; gas += r.spent; net += r.money; obj += r.items;
+    });
+    var tot = ['Total', Math.round(gan), Math.round(gas), Math.round(net), Math.round(obj)]; tot.bold = true;
+    sum.push(tot);
+    var cash = ['Dinero que tengo', Math.round(baseMoney + net)]; cash.bold = true;
+    sum.push([]); sum.push(cash);
+
+    var gRows = [['Fecha', 'Descripción', 'Dinero ($)', 'Cantidad']];
+    Object.keys(all).sort().forEach(function(d){
+      listFor(d).forEach(function(e){
+        if(isBlank(e)) return;
+        gRows.push([d, parseTag(e.name).text || '', Math.round(num(e.money)), Math.round(num(e.items))]);
+      });
+    });
+    var eRows = [['Fecha', 'Descripción', 'Gastado ($)']];
+    Object.keys(exps).sort().forEach(function(d){
+      expList(d).forEach(function(x){ eRows.push([d, parseTag(x.name).text || '', Math.round(num(x.money))]); });
+    });
+
+    var ns = 'xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"', rel = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+    var H = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+    var blob = zipStore([
+      {name:'[Content_Types].xml', text: H + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet3.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'},
+      {name:'_rels/.rels', text: H + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="' + rel + '/officeDocument" Target="xl/workbook.xml"/></Relationships>'},
+      {name:'xl/workbook.xml', text: H + '<workbook ' + ns + ' xmlns:r="' + rel + '"><sheets><sheet name="Resumen" sheetId="1" r:id="rId1"/><sheet name="Ganancias" sheetId="2" r:id="rId2"/><sheet name="Gastos" sheetId="3" r:id="rId3"/></sheets></workbook>'},
+      {name:'xl/_rels/workbook.xml.rels', text: H + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="' + rel + '/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="' + rel + '/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="' + rel + '/worksheet" Target="worksheets/sheet3.xml"/><Relationship Id="rId4" Type="' + rel + '/styles" Target="styles.xml"/></Relationships>'},
+      {name:'xl/styles.xml', text: H + '<styleSheet ' + ns + '><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>'},
+      {name:'xl/worksheets/sheet1.xml', text: sheetXml(sum, [18, 14, 14, 14, 11])},
+      {name:'xl/worksheets/sheet2.xml', text: sheetXml(gRows, [14, 34, 14, 12])},
+      {name:'xl/worksheets/sheet3.xml', text: sheetXml(eRows, [14, 34, 14])}
+    ]);
+    deliverBlob(blob, 'mis-ganancias-' + todayStr() + '.xlsx');
+  }
+  byId('bkExcel').addEventListener('click', exportExcel);
+
+  /* ---------- Deshacer ---------- */
+  var undoSnap = null, undoT;
+  function pushUndo(msg){
+    all[currentDate] = entries;
+    undoSnap = JSON.stringify({all: all, exps: exps, quick: quickList, links: linkList});
+    byId('undoMsg').textContent = msg;
+    byId('undoBar').hidden = false;
+    clearTimeout(undoT);
+    undoT = setTimeout(hideUndo, 8000);
+  }
+  function hideUndo(){ byId('undoBar').hidden = true; clearTimeout(undoT); }
+  byId('undoBtn').addEventListener('click', function(){
+    if(!undoSnap) return hideUndo();
+    var snap;
+    try { snap = JSON.parse(undoSnap); } catch(e) { return hideUndo(); }
+    all = snap.all || {}; exps = snap.exps || {}; quickList = snap.quick || []; linkList = snap.links || [];
+    editingId = null;
+    entries = all[currentDate] || [];
+    try {
+      localStorage.setItem(KEY, JSON.stringify(all));
+      localStorage.setItem(EKEY, JSON.stringify(exps));
+      localStorage.setItem(QKEY, JSON.stringify(quickList));
+      localStorage.setItem(LKEY, JSON.stringify(linkList));
+    } catch(e) {}
+    undoSnap = null; hideUndo();
+    renderQuick(); renderLinks(); renderAll();
+    toast('Restaurado');
+  });
+
+  /* ---------- Editor de colores ---------- */
+  var BG_PRE = ['#0b0b0d','#1b1033','#0a2540','#10331f','#3b0d1c','#fdf6e3','#e8f0ff'];
+  var AC_PRE = ['#ff2d55','#ff9500','#ffe600','#2bff88','#00c3ff','#7a5cff','#ffffff'];
+  function syncColorUi(){
+    byId('cuBg').value = custom.bg; byId('cuBgHex').textContent = custom.bg;
+    byId('cuAc').value = custom.accent; byId('cuAcHex').textContent = custom.accent;
+  }
+  function setCustom(k, v){
+    if(!HEXRE.test(v)) return;
+    custom[k] = v.toLowerCase();
+    saveCustom();
+    theme = 'custom';
+    try { localStorage.setItem(THEME_KEY, theme); } catch(e) {}
+    applyTheme('custom');
+    syncColorUi();
+    renderChart(buildRows());
+  }
+  function buildPresets(host, list, key){
+    list.forEach(function(h){
+      var b = document.createElement('button');
+      b.type = 'button'; b.style.background = h; b.setAttribute('aria-label', h);
+      b.addEventListener('click', function(){ setCustom(key, h); });
+      host.appendChild(b);
+    });
+  }
+  buildPresets(byId('cuBgPre'), BG_PRE, 'bg');
+  buildPresets(byId('cuAcPre'), AC_PRE, 'accent');
+  byId('cuBg').addEventListener('input', function(){ setCustom('bg', this.value); });
+  byId('cuAc').addEventListener('input', function(){ setCustom('accent', this.value); });
+  byId('cuReset').addEventListener('click', function(){
+    custom = {bg:'#1b1033', accent:'#ff2d55'}; saveCustom();
+    try { localStorage.setItem(THEME_KEY, 'azul'); } catch(e) {}
+    applyTheme('azul'); syncColorUi(); renderChart(buildRows());
+    toast('Colores restablecidos');
+  });
+  syncColorUi();
 
   byId('bkExport').addEventListener('click', exportAccount);
   byId('bkImport').addEventListener('click', function(){ byId('bkFile').click(); });
@@ -1392,15 +1739,109 @@
     fr.readAsText(f);
   });
 
+  /* ---------- Guía ---------- */
+  var RGB = [
+    {hex:'#ff2d55', name:'Rosa'}, {hex:'#ff9500', name:'Naranja'}, {hex:'#ffe600', name:'Amarillo'},
+    {hex:'#2bff88', name:'Verde'}, {hex:'#00c3ff', name:'Celeste'}, {hex:'#7a5cff', name:'Violeta'}
+  ];
+  (function buildColors(){
+    var t = byId('rgbTitle'), k = 0;
+    'Colores hexadecimales RGB'.split('').forEach(function(ch){
+      var sp = document.createElement('span');
+      sp.textContent = ch;
+      if(ch !== ' '){ sp.style.color = RGB[k % RGB.length].hex; k++; }
+      t.appendChild(sp);
+    });
+    var code = byId('rgbCode');
+    code.appendChild(document.createTextNode('linear-gradient(90deg, '));
+    RGB.concat([RGB[0]]).forEach(function(c, i){
+      var sp = document.createElement('span');
+      sp.textContent = c.hex; sp.style.color = c.hex;
+      code.appendChild(sp);
+      code.appendChild(document.createTextNode(i < RGB.length ? ', ' : ')'));
+    });
+    var list = byId('hexList');
+    RGB.forEach(function(c){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'hex-row';
+      var dot = document.createElement('i'); dot.style.background = c.hex;
+      var cd = document.createElement('code'); cd.textContent = c.hex; cd.style.color = c.hex;
+      var sm = document.createElement('small'); sm.textContent = c.name;
+      b.appendChild(dot); b.appendChild(cd); b.appendChild(sm);
+      b.addEventListener('click', function(){
+        try { navigator.clipboard.writeText(c.hex).then(function(){ toast('Copiado ' + c.hex); }, function(){ toast(c.hex); }); }
+        catch(e) { toast(c.hex); }
+      });
+      list.appendChild(b);
+    });
+  })();
+
+  var MORE = [
+    {g:'Rojos', c:[['#ff0000','Rojo'],['#dc143c','Carmesí'],['#b22222','Ladrillo'],['#ff4500','Rojo naranja'],['#ff6b6b','Coral claro'],['#8b0000','Vino']]},
+    {g:'Naranjas y amarillos', c:[['#ff7f50','Coral'],['#ffa500','Naranja'],['#ffbf00','Ámbar'],['#ffd700','Oro'],['#ffff00','Amarillo'],['#f0e68c','Caqui']]},
+    {g:'Verdes', c:[['#00ff00','Lima'],['#32cd32','Verde lima'],['#00c853','Esmeralda'],['#228b22','Bosque'],['#7fff00','Chartreuse'],['#00fa9a','Menta'],['#98fb98','Verde pálido'],['#008080','Verde azulado']]},
+    {g:'Azules', c:[['#00ffff','Cian'],['#87ceeb','Cielo'],['#1e90ff','Azul dodger'],['#4169e1','Azul real'],['#0000ff','Azul'],['#000080','Marino']]},
+    {g:'Morados y rosas', c:[['#9b59b6','Amatista'],['#800080','Púrpura'],['#4b0082','Índigo'],['#da70d6','Orquídea'],['#ee82ee','Violeta claro'],['#ff00ff','Magenta'],['#ff1493','Rosa fuerte'],['#ffc0cb','Rosa']]},
+    {g:'Marrones y neutros', c:[['#8b4513','Café'],['#d2691e','Chocolate'],['#deb887','Arena'],['#808080','Gris'],['#c0c0c0','Plata'],['#000000','Negro'],['#ffffff','Blanco']]}
+  ];
+  function lum(hex){
+    var n = parseInt(hex.slice(1), 16), r = n >> 16 & 255, g = n >> 8 & 255, b = n & 255;
+    return (0.2126*r + 0.7152*g + 0.0722*b) / 255;
+  }
+  (function buildMore(){
+    var box = byId('hexMore');
+    MORE.forEach(function(grp){
+      var h = document.createElement('div'); h.className = 'hex-group'; h.textContent = grp.g;
+      var grid = document.createElement('div'); grid.className = 'hex-grid';
+      grp.c.forEach(function(c){
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'hex-row';
+        var dot = document.createElement('i'); dot.style.background = c[0];
+        var w = document.createElement('div');
+        var cd = document.createElement('code'); cd.textContent = c[0];
+        var l = lum(c[0]);
+        if(l > .2 && l < .85) cd.style.color = c[0];
+        var sm = document.createElement('small'); sm.textContent = c[1];
+        w.appendChild(cd); w.appendChild(sm);
+        b.appendChild(dot); b.appendChild(w);
+        b.addEventListener('click', function(){
+          try { navigator.clipboard.writeText(c[0]).then(function(){ toast('Copiado ' + c[0]); }, function(){ toast(c[0]); }); }
+          catch(e) { toast(c[0]); }
+        });
+        grid.appendChild(b);
+      });
+      box.appendChild(h); box.appendChild(grid);
+    });
+  })();
+
+  var $guide = byId('guide');
+  var GPANELS = {main:'gpMain', colors:'gpColors', home:'gpHome', expenses:'gpExpenses', money:'gpMoney', quick:'gpQuick', more:'gpMore', account:'gpAccount'};
+  var GTITLES = {main:'Guía', colors:'Colores RGB', home:'Inicio y Historial', expenses:'Gastos', money:'Dinero que tengo', quick:'Opción rápida y accesos', more:'Buscar, deshacer y Excel', account:'Cuenta y copia de seguridad'};
+  function showGuide(name){
+    Object.keys(GPANELS).forEach(function(k){ byId(GPANELS[k]).hidden = k !== name; });
+    byId('gTitle').textContent = GTITLES[name];
+    byId('gBack').hidden = name === 'main';
+    document.querySelector('#guide .sheet').scrollTop = 0;
+  }
+  function closeGuide(){ $guide.hidden = true; }
+  byId('guideBtn').addEventListener('click', function(){ showGuide('main'); $guide.hidden = false; });
+  byId('gClose').addEventListener('click', closeGuide);
+  byId('gBack').addEventListener('click', function(){ showGuide('main'); });
+  $guide.addEventListener('click', function(e){ if(e.target === $guide) closeGuide(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeGuide(); });
+  Array.prototype.forEach.call(document.querySelectorAll('.g-item'), function(b){
+    b.addEventListener('click', function(){ showGuide(b.getAttribute('data-gg')); });
+  });
+
   /* ---------- Apartados de Ajustes ---------- */
-  var PANELS = {main:'pnlMain', account:'pnlAccount', money:'pnlMoney', theme:'pnlTheme', quick:'pnlQuick', links:'pnlLinks'};
-  var PTITLES = {main:'Configuración', account:'Cuenta', money:'Dinero que tengo', theme:'Tema', quick:'Opción rápida', links:'Accesos directos'};
+  var PANELS = {main:'pnlMain', account:'pnlAccount', money:'pnlMoney', colors:'pnlColors', theme:'pnlTheme', quick:'pnlQuick', links:'pnlLinks'};
+  var PTITLES = {main:'Configuración', account:'Cuenta', money:'Dinero que tengo', colors:'Editor de colores', theme:'Tema', quick:'Opción rápida', links:'Accesos directos'};
   function showPanel(name){
     Object.keys(PANELS).forEach(function(k){ byId(PANELS[k]).hidden = k !== name; });
     byId('setTitle').textContent = PTITLES[name];
     byId('setBack').hidden = name === 'main';
     qReset(); lReset();
     if(name === 'account') loadAccountPanel();
+    if(name === 'colors') syncColorUi();
     if(name === 'money') byId('mnAmt').value = Math.round(baseMoney + netTotal());
     document.querySelector('.sheet').scrollTop = 0;
   }
