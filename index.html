@@ -197,18 +197,61 @@
   .set-item:active{background:var(--surface2)}
   a.lnk{color:inherit;text-decoration:none;display:block}
   #lList .ent{cursor:default}
+
+  /* Foto de perfil / cuenta */
+  .top{position:relative}
+  .avatar{position:absolute;right:0;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:2px solid var(--blue-l);background:var(--chip);color:var(--chipx);padding:0;overflow:hidden;display:grid;place-items:center;font-weight:800;font-size:1.05rem;cursor:pointer}
+  .avatar svg{width:22px;height:22px}
+  .avatar img,.av-big img{width:100%;height:100%;object-fit:cover;display:block}
+  .av-big{width:104px;height:104px;border-radius:50%;margin:4px auto 12px;border:3px solid var(--blue-l);background:var(--chip);color:var(--chipx);overflow:hidden;display:grid;place-items:center;font-size:2.4rem;font-weight:800}
+  .av-big svg{width:48px;height:48px}
+  .av-actions{display:flex;justify-content:center;gap:8px;margin-bottom:16px}
+
+  /* Dinero que tengo */
+  .wallet{background:var(--surface);border-radius:18px;padding:16px 14px;text-align:center;margin-bottom:16px;box-shadow:var(--shadow)}
+  .wallet-amt{font-size:2.2rem;font-weight:800;letter-spacing:-.02em;margin:2px 0 0;word-break:break-word}
+  .wallet-amt.neg{color:var(--downx)}
+  /* RGB animado: perfil y botón de agregar */
+  :root{--rgb:linear-gradient(90deg,#ff2d55,#ff9500,#ffe600,#2bff88,#00c3ff,#7a5cff,#ff2d55)}
+  @keyframes rgbbtn{from{background-position:0 0}to{background-position:200% 0}}
+  @keyframes rgbring{from{background-position:0 0,0 0,0 0}to{background-position:0 0,0 0,200% 0}}
+  .fab,#pnlAccount .chip,#pnlAccount .btn-done,#pnlAccount .btn-wide{
+    background:var(--rgb);background-size:200% 100%;animation:rgbbtn 4s linear infinite;
+    color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.45);
+  }
+  .fab{border-color:var(--bg)}
+  .fab svg{filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))}
+  .avatar,.av-big{
+    border-color:transparent;
+    background:linear-gradient(var(--chip),var(--chip)) padding-box,linear-gradient(var(--bg),var(--bg)) padding-box,var(--rgb) border-box;
+    background-size:100% 100%,100% 100%,200% 100%;
+    animation:rgbring 4s linear infinite;
+  }
+  .av-big{border-width:4px}
+  @media (prefers-reduced-motion:reduce){.fab,#pnlAccount .chip,#pnlAccount .btn-done,#pnlAccount .btn-wide,.avatar,.av-big{animation:none}}
+  .btn-wide{display:block;width:100%;margin-top:10px;padding:13px;border-radius:14px;font-weight:700;font-size:.9rem;cursor:pointer;border:0}
+  .btn-wide.pri{background:var(--blue);color:var(--onacc)}
+  .btn-wide.sec{background:var(--chip);color:var(--chipx)}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <div class="top"><h1>Mis Ganancias</h1></div>
+  <div class="wallet">
+    <div class="label">Dinero que tengo</div>
+    <div class="wallet-amt" id="walletMoney">$0</div>
+  </div>
+
+  <div class="top">
+    <h1>Mis Ganancias</h1>
+    <button class="avatar" id="avatarBtn" type="button" aria-label="Mi cuenta"></button>
+  </div>
 
   <!-- ===== INICIO ===== -->
   <section id="viewToday">
     <div class="grand">
       <div class="label">Total ganado</div>
-      <div class="grand-amt" id="grandMoney">$0.00</div>
+      <div class="grand-amt" id="grandMoney">$0</div>
       <div class="grand-sub" id="grandSub"></div>
     </div>
 
@@ -240,7 +283,7 @@
     <div class="daytotal">
       <div>
         <div class="label">Total del día</div>
-        <div class="day-amt" id="dayMoney">$0.00</div>
+        <div class="day-amt" id="dayMoney">$0</div>
       </div>
       <div class="day-right">
         <div class="day-items" id="dayItems">0 objetos</div>
@@ -275,14 +318,14 @@
     </div>
     <div class="card">
       <div class="label">Gastado en el día</div>
-      <div class="day-amt" id="expTotal">$0.00</div>
+      <div class="day-amt" id="expTotal">$0</div>
     </div>
     <div class="form">
       <input type="text" id="expName" placeholder="Descripción (opcional)">
       <div class="grid2" style="align-items:end">
         <div>
           <label for="expAmt">Gastado ($)</label>
-          <input type="number" id="expAmt" inputmode="decimal" min="0" step="any" placeholder="0.00">
+          <input type="number" id="expAmt" inputmode="numeric" min="0" step="1" placeholder="0">
         </div>
         <button class="btn-done" id="expAdd" type="button">Agregar</button>
       </div>
@@ -328,9 +371,43 @@
     </div>
 
     <div class="panel" id="pnlMain">
+      <button class="set-item" data-go="account" type="button"><span>Cuenta</span><small id="valAccount"></small><b>›</b></button>
+      <button class="set-item" data-go="money" type="button"><span>Dinero que tengo</span><small id="valMoney"></small><b>›</b></button>
       <button class="set-item" data-go="theme" type="button"><span>Tema</span><small id="valTheme"></small><b>›</b></button>
       <button class="set-item" data-go="quick" type="button"><span>Opción rápida</span><small id="valQuick"></small><b>›</b></button>
       <button class="set-item" data-go="links" type="button"><span>Accesos directos</span><small id="valLinks"></small><b>›</b></button>
+    </div>
+
+    <div class="panel" id="pnlAccount" hidden>
+      <div class="av-big" id="avBig"></div>
+      <div class="av-actions">
+        <button class="chip" id="avPick" type="button">Elegir foto</button>
+        <button class="chip" id="avClear" type="button" hidden>Quitar foto</button>
+      </div>
+      <input type="file" id="avFile" accept="image/*" hidden>
+      <label for="acName">Tu nombre</label>
+      <input type="text" id="acName" maxlength="30" autocomplete="off" placeholder="Ej. María">
+      <div class="form-actions">
+        <button class="btn-del" id="acDel" type="button" hidden>Eliminar cuenta</button>
+        <button class="btn-done" id="acSave" type="button" style="margin-left:auto">Crear cuenta</button>
+      </div>
+
+      <hr class="sep" style="margin:18px 0 14px">
+      <div class="set-name">Importar y exportar</div>
+      <div class="sub" style="margin-bottom:6px">Exporta tu cuenta a un archivo que guarda toda la información: ganancias, gastos, dinero que tienes, perfil con foto, opciones rápidas, accesos directos y tema.</div>
+      <button class="btn-wide pri" id="bkExport" type="button">Exportar cuenta</button>
+      <button class="btn-wide sec" id="bkImport" type="button">Importar cuenta</button>
+      <input type="file" id="bkFile" accept=".json,application/json" hidden>
+      <div class="sub" style="margin:12px 0 0;font-size:.78rem">Al importar, se reemplaza toda la información actual por la del archivo.</div>
+    </div>
+
+    <div class="panel" id="pnlMoney" hidden>
+      <div class="sub" style="margin-bottom:12px">Escribe cuánto dinero tienes ahora. Desde ahí se actualiza solo: suma tus ganancias y resta tus gastos.</div>
+      <label for="mnAmt">Dinero que tengo ($)</label>
+      <input type="number" id="mnAmt" inputmode="numeric" step="1" placeholder="0">
+      <div class="form-actions" style="justify-content:flex-end">
+        <button class="btn-done" id="mnSave" type="button">Guardar</button>
+      </div>
     </div>
 
     <div class="panel" id="pnlTheme" hidden>
@@ -352,7 +429,7 @@
       <div class="grid2">
         <div>
           <label for="qMoney">Recaudado ($)</label>
-          <input type="number" id="qMoney" inputmode="decimal" min="0" step="any" placeholder="0.00">
+          <input type="number" id="qMoney" inputmode="numeric" min="0" step="1" placeholder="0">
         </div>
         <div>
           <label for="qItems">Cantidad vendida</label>
@@ -394,6 +471,8 @@
   try { exps = JSON.parse(localStorage.getItem(EKEY)) || {}; } catch(e) { exps = {}; }
   function expList(d){ return exps[d] || []; }
   function spentFor(d){ var t = 0; expList(d).forEach(function(x){ t += num(x.money); }); return t; }
+  var BKEY = 'dinero_base_v1', baseMoney = 0;
+  try { baseMoney = parseFloat(localStorage.getItem(BKEY)) || 0; } catch(e) { baseMoney = 0; }
   function saveExp(){ try { localStorage.setItem(EKEY, JSON.stringify(exps)); } catch(e) {} }
 
   var C_UP = '#34d27b', C_DOWN = '#ff5c6c', C_FLAT = '#dbe7ff';
@@ -407,10 +486,12 @@
   }
   function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
   function num(v){ var n = parseFloat(v); return isNaN(n) ? 0 : n; }
+  function whole(v){ return Math.round(num(v)); }
   function fmtMoney(n){
-    return (n < 0 ? '−' : '') + '$' + Math.abs(n).toLocaleString('es', {minimumFractionDigits:2, maximumFractionDigits:2});
+    var r = Math.round(n);
+    return (r < 0 ? '−' : '') + '$' + Math.abs(r).toLocaleString('es', {maximumFractionDigits:0});
   }
-  function fmtNum(n){ return n.toLocaleString('es', {maximumFractionDigits:2}); }
+  function fmtNum(n){ return Math.round(n).toLocaleString('es', {maximumFractionDigits:0}); }
   function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
   function parseDay(d){ return new Date(d + 'T00:00:00'); }
   function byId(id){ return document.getElementById(id); }
@@ -470,8 +551,8 @@
 
   function trend(cur, prev, fmt){
     if(prev == null) return {dir:'first', cls:'flat', arrow:'', text:''};
-    var c = Math.round(cur*100), p = Math.round(prev*100);
-    var diff = Math.abs(c - p) / 100;
+    var c = Math.round(cur), p = Math.round(prev);
+    var diff = Math.abs(c - p);
     if(c > p) return {dir:'up', cls:'up', arrow:'↑', text:'+' + fmt(diff)};
     if(c < p) return {dir:'down', cls:'down', arrow:'↓', text:'−' + fmt(diff)};
     return {dir:'same', cls:'flat', arrow:'=', text:'Igual'};
@@ -513,6 +594,10 @@
     var m = 0, it = 0, sp = 0;
     rows.forEach(function(r){ m += r.money; it += r.items; sp += r.spent; });
     byId('grandMoney').textContent = fmtMoney(m);
+    var bal = baseMoney + m, wm = byId('walletMoney');
+    wm.textContent = fmtMoney(bal);
+    wm.classList.toggle('neg', Math.round(bal) < 0);
+    byId('valMoney').textContent = fmtMoney(bal);
     byId('grandSub').textContent = 'Cantidad vendida: ' + fmtNum(it) +
       ' · ' + rows.length + plural(rows.length, ' día', ' días') + (sp > 0 ? ' · gastos ' + fmtMoney(sp) : '');
   }
@@ -711,11 +796,11 @@
 
     var g1 = document.createElement('div');
     var l1 = document.createElement('label'); l1.textContent = 'Recaudado ($)';
-    var i1 = document.createElement('input'); i1.type = 'number'; i1.inputMode = 'decimal';
-    i1.min = '0'; i1.step = 'any'; i1.placeholder = '0.00';
+    var i1 = document.createElement('input'); i1.type = 'number'; i1.inputMode = 'numeric';
+    i1.min = '0'; i1.step = '1'; i1.placeholder = '0';
     i1.value = (e.money === '' || e.money == null) ? '' : e.money;
     i1.addEventListener('input', function(){
-      e.money = i1.value === '' ? '' : num(i1.value);
+      e.money = i1.value === '' ? '' : whole(i1.value);
       save(); refreshStats();
     });
     i1.addEventListener('keydown', onEnter);
@@ -923,7 +1008,7 @@
   }
 
   function addExpense(){
-    var a = num(byId('expAmt').value);
+    var a = whole(byId('expAmt').value);
     if(a <= 0){ byId('expAmt').focus(); return; }
     if(!exps[currentDate]) exps[currentDate] = [];
     exps[currentDate].push({id: uid(), name: byId('expName').value.trim(), money: a});
@@ -1019,7 +1104,7 @@
     var name = byId('qName').value.trim();
     var mv = byId('qMoney').value, iv = byId('qItems').value;
     if(!name && num(mv) <= 0){ byId('qMoney').focus(); return; }
-    var data = {name: name, money: mv === '' ? '' : num(mv), items: iv === '' ? '' : num(iv)};
+    var data = {name: name, money: mv === '' ? '' : whole(mv), items: iv === '' ? '' : num(iv)};
     if(qEdit){
       quickList.forEach(function(x){ if(x.id === qEdit){ x.name = data.name; x.money = data.money; x.items = data.items; } });
     } else {
@@ -1109,14 +1194,214 @@
   });
   renderLinks();
 
+  /* ---------- Cuenta y foto de perfil ---------- */
+  var PKEY = 'perfil_v1', profile = null, draftPhoto = '';
+  try { profile = JSON.parse(localStorage.getItem(PKEY)) || null; } catch(e) { profile = null; }
+  var PERSON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>';
+
+  function fillAvatar(node, photo, name){
+    node.innerHTML = '';
+    if(photo){
+      var im = document.createElement('img'); im.src = photo; im.alt = '';
+      node.appendChild(im);
+    } else if(name && name.trim()){
+      node.textContent = name.trim().charAt(0).toUpperCase();
+    } else {
+      node.innerHTML = PERSON;
+    }
+  }
+  function renderProfile(){
+    fillAvatar(byId('avatarBtn'), profile && profile.photo, profile && profile.name);
+    byId('valAccount').textContent = profile ? (profile.name || 'Mi cuenta') : 'Sin crear';
+  }
+  function loadAccountPanel(){
+    byId('acName').value = profile ? profile.name : '';
+    draftPhoto = profile ? (profile.photo || '') : '';
+    fillAvatar(byId('avBig'), draftPhoto, byId('acName').value);
+    byId('avClear').hidden = !draftPhoto;
+    byId('acDel').hidden = !profile;
+    byId('acSave').textContent = profile ? 'Guardar cambios' : 'Crear cuenta';
+  }
+  function openSettingsAt(name){ showPanel(name); $set.hidden = false; }
+
+  byId('avatarBtn').addEventListener('click', function(){ openSettingsAt('account'); });
+  byId('avPick').addEventListener('click', function(){ byId('avFile').click(); });
+  byId('avClear').addEventListener('click', function(){
+    draftPhoto = '';
+    fillAvatar(byId('avBig'), '', byId('acName').value);
+    byId('avClear').hidden = true;
+  });
+  byId('acName').addEventListener('input', function(){
+    if(!draftPhoto) fillAvatar(byId('avBig'), '', byId('acName').value);
+  });
+  byId('avFile').addEventListener('change', function(){
+    var f = this.files && this.files[0];
+    this.value = '';
+    if(!f) return;
+    var fr = new FileReader();
+    fr.onload = function(){
+      var im = new Image();
+      im.onload = function(){
+        var S = 256, c = document.createElement('canvas');
+        c.width = c.height = S;
+        var m = Math.min(im.width, im.height);
+        c.getContext('2d').drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, S, S);
+        draftPhoto = c.toDataURL('image/jpeg', .85);
+        fillAvatar(byId('avBig'), draftPhoto, '');
+        byId('avClear').hidden = false;
+      };
+      im.onerror = function(){ toast('No se pudo leer esa imagen'); };
+      im.src = fr.result;
+    };
+    fr.readAsDataURL(f);
+  });
+  byId('acSave').addEventListener('click', function(){
+    var name = byId('acName').value.trim();
+    if(!name){ byId('acName').focus(); toast('Escribe tu nombre'); return; }
+    var wasNew = !profile;
+    profile = {name: name, photo: draftPhoto};
+    try { localStorage.setItem(PKEY, JSON.stringify(profile)); } catch(e) { toast('No se pudo guardar la foto'); }
+    renderProfile();
+    toast(wasNew ? 'Cuenta creada' : 'Cuenta guardada');
+    showPanel('main');
+  });
+  byId('acDel').addEventListener('click', function(){
+    if(!confirm('¿Eliminar tu cuenta y foto de perfil? Tus ganancias y gastos no se borran.')) return;
+    profile = null;
+    try { localStorage.removeItem(PKEY); } catch(e) {}
+    renderProfile();
+    showPanel('main');
+  });
+  renderProfile();
+
+  /* ---------- Dinero que tengo ---------- */
+  function netTotal(){
+    var m = 0;
+    buildRows().forEach(function(r){ m += r.money; });
+    return m;
+  }
+  function saveMoney(){
+    var raw = byId('mnAmt').value;
+    if(raw === ''){ byId('mnAmt').focus(); return; }
+    baseMoney = whole(raw) - netTotal();
+    try { localStorage.setItem(BKEY, String(baseMoney)); } catch(e) {}
+    refreshStats();
+    toast('Dinero actualizado');
+    showPanel('main');
+  }
+  byId('mnSave').addEventListener('click', saveMoney);
+  byId('mnAmt').addEventListener('keydown', function(ev){ if(ev.key === 'Enter'){ ev.preventDefault(); saveMoney(); } });
+
+  /* ---------- Importar y exportar cuenta ---------- */
+  function buildBackup(){
+    save();
+    return {
+      app: 'mis-ganancias', version: 1, exported: new Date().toISOString(),
+      data: {
+        ganancias: all, gastos: exps, rapidas: quickList, accesos: linkList,
+        dinero_base: baseMoney, perfil: profile, tema: theme
+      }
+    };
+  }
+
+  function exportAccount(){
+    var json = JSON.stringify(buildBackup(), null, 2);
+    var fname = 'mis-ganancias-' + todayStr() + '.json';
+    var blob = new Blob([json], {type: 'application/json'});
+    var mobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    try {
+      var file = new File([blob], fname, {type: 'application/json'});
+      if(mobile && navigator.canShare && navigator.canShare({files: [file]})){
+        navigator.share({files: [file], title: 'Mis Ganancias'}).then(function(){
+          toast('Cuenta exportada');
+        }).catch(function(err){
+          if(!err || err.name !== 'AbortError') downloadBlob(blob, fname);
+        });
+        return;
+      }
+    } catch(e) {}
+    downloadBlob(blob, fname);
+  }
+  function downloadBlob(blob, fname){
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = fname;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+    toast('Cuenta exportada');
+  }
+
+  function isObj(x){ return x && typeof x === 'object' && !Array.isArray(x); }
+
+  function applyBackup(b){
+    if(!isObj(b) || b.app !== 'mis-ganancias' || !isObj(b.data)) throw new Error('formato');
+    var d = b.data;
+    var nAll = isObj(d.ganancias) ? d.ganancias : {};
+    var nExp = isObj(d.gastos) ? d.gastos : {};
+    Object.keys(nAll).forEach(function(k){ if(!Array.isArray(nAll[k])) delete nAll[k]; });
+    Object.keys(nExp).forEach(function(k){ if(!Array.isArray(nExp[k])) delete nExp[k]; });
+    var nQuick = Array.isArray(d.rapidas) ? d.rapidas.filter(isObj) : [];
+    var nLinks = [];
+    (Array.isArray(d.accesos) ? d.accesos : []).forEach(function(l){
+      if(!isObj(l)) return;
+      var u = fixUrl(String(l.url || ''));
+      if(u) nLinks.push({id: l.id || uid(), name: String(l.name || ''), url: u});
+    });
+    var nBase = parseFloat(d.dinero_base); if(isNaN(nBase)) nBase = 0;
+    var nProf = null;
+    if(isObj(d.perfil) && typeof d.perfil.name === 'string'){
+      var ph = typeof d.perfil.photo === 'string' && d.perfil.photo.indexOf('data:image/') === 0 ? d.perfil.photo : '';
+      nProf = {name: d.perfil.name.slice(0, 30), photo: ph};
+    }
+
+    all = nAll; exps = nExp; quickList = nQuick; linkList = nLinks; baseMoney = nBase; profile = nProf;
+    editingId = null;
+    entries = all[currentDate] || [];
+    if(THEME_BG[d.tema]) theme = d.tema;
+
+    try {
+      localStorage.setItem(KEY, JSON.stringify(all));
+      localStorage.setItem(EKEY, JSON.stringify(exps));
+      localStorage.setItem(QKEY, JSON.stringify(quickList));
+      localStorage.setItem(LKEY, JSON.stringify(linkList));
+      localStorage.setItem(BKEY, String(baseMoney));
+      localStorage.setItem(THEME_KEY, theme);
+      if(profile) localStorage.setItem(PKEY, JSON.stringify(profile)); else localStorage.removeItem(PKEY);
+    } catch(e) { toast('No se pudo guardar todo en el dispositivo'); }
+
+    applyTheme(theme);
+    renderQuick(); renderLinks(); renderProfile(); renderAll();
+  }
+
+  byId('bkExport').addEventListener('click', exportAccount);
+  byId('bkImport').addEventListener('click', function(){ byId('bkFile').click(); });
+  byId('bkFile').addEventListener('change', function(){
+    var f = this.files && this.files[0];
+    this.value = '';
+    if(!f) return;
+    var fr = new FileReader();
+    fr.onload = function(){
+      var parsed;
+      try { parsed = JSON.parse(fr.result); } catch(e) { toast('El archivo no es válido'); return; }
+      if(!isObj(parsed) || parsed.app !== 'mis-ganancias' || !isObj(parsed.data)){ toast('Ese archivo no es una cuenta de Mis Ganancias'); return; }
+      if(!confirm('¿Importar esta cuenta? Se reemplazará toda la información actual por la del archivo.')) return;
+      try { applyBackup(parsed); toast('Cuenta importada'); showPanel('main'); }
+      catch(e) { toast('No se pudo importar el archivo'); }
+    };
+    fr.onerror = function(){ toast('No se pudo leer el archivo'); };
+    fr.readAsText(f);
+  });
+
   /* ---------- Apartados de Ajustes ---------- */
-  var PANELS = {main:'pnlMain', theme:'pnlTheme', quick:'pnlQuick', links:'pnlLinks'};
-  var PTITLES = {main:'Configuración', theme:'Tema', quick:'Opción rápida', links:'Accesos directos'};
+  var PANELS = {main:'pnlMain', account:'pnlAccount', money:'pnlMoney', theme:'pnlTheme', quick:'pnlQuick', links:'pnlLinks'};
+  var PTITLES = {main:'Configuración', account:'Cuenta', money:'Dinero que tengo', theme:'Tema', quick:'Opción rápida', links:'Accesos directos'};
   function showPanel(name){
     Object.keys(PANELS).forEach(function(k){ byId(PANELS[k]).hidden = k !== name; });
     byId('setTitle').textContent = PTITLES[name];
     byId('setBack').hidden = name === 'main';
     qReset(); lReset();
+    if(name === 'account') loadAccountPanel();
+    if(name === 'money') byId('mnAmt').value = Math.round(baseMoney + netTotal());
     document.querySelector('.sheet').scrollTop = 0;
   }
   byId('setBack').addEventListener('click', function(){ showPanel('main'); });
