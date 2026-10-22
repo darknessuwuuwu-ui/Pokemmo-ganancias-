@@ -5,13 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#071c4f">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Ganancias">
+<meta name="apple-mobile-web-app-title" content="ADMMO">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mis Ganancias</title>
+<title>ADMMO</title>
 <style>
   :root{
     --bg:#0b0b0d;--grad:linear-gradient(180deg,#17171b 0%,#0b0b0d 55%,#050506 100%);
@@ -20,6 +21,7 @@
     --input:rgba(255,255,255,.07);--inputline:rgba(255,255,255,.14);--form:rgba(255,255,255,.1);
     --blue:#2f7bff;--blue-l:#5cb8ff;--onacc:#fff;--up:#34d27b;--down:#ff5c6c;--upx:#6ee7a2;--downx:#ff8f9b;
     --flat:#dbe7ff;--axis:rgba(255,255,255,.18);--shadow:none;color-scheme:dark;
+    --gain:#34d27b;--loss:#ff5c6c;
   }
   :root[data-theme=azul]{
     --bg:#071c4f;--grad:linear-gradient(180deg,#0b2d7a 0%,#071c4f 55%,#051237 100%);--nav:rgba(7,28,79,.96);
@@ -28,11 +30,13 @@
     --bg:#4a0a12;--grad:linear-gradient(180deg,#7a0f1a 0%,#4a0a12 55%,#2b050a 100%);--nav:rgba(74,10,18,.96);
     --chip:rgba(255,255,255,.16);--chipx:#ffd6d9;--blue:#e5303f;--blue-l:#ffd6d9;
     --up:#5be39a;--down:#ff8a95;--upx:#8bf0b8;--downx:#ffb3ba;--flat:#ffe3e6;
+    --gain:#5dffa0;--loss:#ff9aa5;
   }
   :root[data-theme=verde]{
     --bg:#084a28;--grad:linear-gradient(180deg,#0f6b3a 0%,#084a28 55%,#04301a 100%);--nav:rgba(8,74,40,.96);
     --chip:rgba(255,255,255,.16);--chipx:#c9f7dc;--blue:#34d27b;--blue-l:#7ff0ae;--onacc:#04301a;
     --up:#c4ffdc;--down:#ff7a86;--upx:#c4ffdc;--downx:#ffa3ab;--flat:#d9f7e6;
+    --gain:#6dff9f;--loss:#ff7a86;
   }
   :root[data-theme=amarillo]{
     --bg:#ffe97a;--grad:linear-gradient(180deg,#fff6c2 0%,#ffe97a 60%,#ffd93d 100%);
@@ -41,6 +45,7 @@
     --input:rgba(255,255,255,.75);--inputline:rgba(43,33,0,.2);--form:#fffbe0;
     --blue:#e0a800;--blue-l:#b88700;--onacc:#2b2100;--up:#168a4a;--down:#d12f3f;--upx:#0f7a3f;--downx:#b82233;
     --flat:#8a7400;--axis:rgba(43,33,0,.18);--shadow:0 1px 3px rgba(43,33,0,.12);color-scheme:light;
+    --gain:#0f7a3f;--loss:#c4232f;
   }
   :root[data-theme=blanco]{
     --bg:#eef3ff;--grad:linear-gradient(180deg,#f7faff 0%,#e9f0ff 60%,#dce8ff 100%);
@@ -49,6 +54,7 @@
     --input:#fff;--inputline:rgba(11,27,74,.18);--form:#fff;
     --up:#22b868;--down:#f0475b;--upx:#14935a;--downx:#d6354a;--flat:#8aa0cf;
     --axis:rgba(11,27,74,.16);--shadow:0 1px 3px rgba(11,27,74,.1);color-scheme:light;
+    --gain:#14935a;--loss:#d6354a;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   [hidden]{display:none!important}
@@ -175,7 +181,10 @@
   .sw{background:none;border:2px solid transparent;border-radius:14px;padding:8px 2px 6px;color:var(--muted);font-size:.7rem;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px}
   .sw i{width:34px;height:34px;border-radius:50%;border:1px solid rgba(128,128,128,.45)}
   .sw.on{border-color:var(--blue-l);color:var(--text)}
-  .day-exp{font-size:.8rem;font-weight:600;color:var(--downx);margin-top:2px}
+  .day-exp{font-size:.8rem;font-weight:600;color:var(--loss);margin-top:2px}
+  /* Ganancias en verde, pérdidas en rojo */
+  .gain{color:var(--gain)}
+  .loss{color:var(--loss)}
   @keyframes slL{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
   @keyframes slR{from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:none}}
   .sl{animation:slL .22s ease-out}
@@ -210,7 +219,6 @@
   /* Dinero que tengo */
   .wallet{background:var(--surface);border-radius:18px;padding:16px 14px;text-align:center;margin-bottom:16px;box-shadow:var(--shadow)}
   .wallet-amt{font-size:2.2rem;font-weight:800;letter-spacing:-.02em;margin:2px 0 0;word-break:break-word}
-  .wallet-amt.neg{color:var(--downx)}
   /* RGB animado: perfil y botón de agregar */
   :root{--rgb:linear-gradient(90deg,#ff2d55,#ff9500,#ffe600,#2bff88,#00c3ff,#7a5cff,#ff2d55)}
   @keyframes rgbbtn{from{background-position:0 0}to{background-position:200% 0}}
@@ -262,9 +270,25 @@
   .undo{position:fixed;left:50%;bottom:calc(142px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:14px;background:var(--text);color:var(--bg);padding:8px 8px 8px 18px;border-radius:999px;font-size:.85rem;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.35);max-width:92vw;white-space:nowrap}
   .undo span{overflow:hidden;text-overflow:ellipsis}
   .undo button{border:0;border-radius:999px;background:var(--blue);color:var(--onacc);font-weight:800;font-size:.82rem;padding:9px 16px;cursor:pointer}
+  /* Clan */
+  .sel{background:var(--input);color:var(--text);border:1px solid var(--inputline);border-radius:12px;padding:9px 10px;font-size:.85rem;font-family:inherit;max-width:48%}
+  .cl-sub{margin-top:16px}
   .btn-wide{display:block;width:100%;margin-top:10px;padding:13px;border-radius:14px;font-weight:700;font-size:.9rem;cursor:pointer;border:0}
   .btn-wide.pri{background:var(--blue);color:var(--onacc)}
   .btn-wide.sec{background:var(--chip);color:var(--chipx)}
+  /* Tipo de gráfica */
+  .ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .ct{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 8px 12px;border-radius:14px;border:2px solid transparent;background:var(--surface);color:var(--muted);font-weight:700;font-size:.85rem;cursor:pointer;box-shadow:var(--shadow)}
+  .ct svg{width:64px;height:42px}
+  .ct.on{border-color:var(--blue-l);color:var(--text)}
+  /* Pastel */
+  .pie-legend{margin:12px 4px 2px}
+  .pie-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-size:.84rem}
+  .pie-row:first-child{border-top:0}
+  .pie-row i{width:12px;height:12px;border-radius:50%;flex:none}
+  .pie-row span{flex:1}
+  .pie-row b{font-weight:700;white-space:nowrap}
+  .pie-row small{color:var(--muted);font-weight:600;min-width:34px;text-align:right}
 </style>
 </head>
 <body>
@@ -277,7 +301,7 @@
 
   <div class="top">
     <button class="guide-btn" id="guideBtn" type="button" aria-label="Guía" title="Guía"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg></button>
-    <h1>Mis Ganancias</h1>
+    <h1>ADMMO</h1>
     <button class="avatar" id="avatarBtn" type="button" aria-label="Mi cuenta"></button>
   </div>
 
@@ -300,7 +324,7 @@
       </div>
       <div class="chart-wrap" id="chart"></div>
       <div id="tbl" hidden></div>
-      <div class="legend"><span class="u">verde: subió</span> · <span class="d">rojo: bajó</span> · <span class="f">● primer día</span></div>
+      <div class="legend" id="chartLegend"><span class="u">↑ verde: subió</span> · <span class="d">↓ rojo: bajó</span> · <span class="f">● primer día</span></div>
     </div>
 
 
@@ -407,8 +431,10 @@
 
     <div class="panel" id="pnlMain">
       <button class="set-item" data-go="account" type="button"><span>Cuenta</span><small id="valAccount"></small><b>›</b></button>
+      <button class="set-item" data-go="clan" type="button"><span>Clan</span><small id="valClan"></small><b>›</b></button>
       <button class="set-item" data-go="money" type="button"><span>Dinero que tengo</span><small id="valMoney"></small><b>›</b></button>
       <button class="set-item" data-go="theme" type="button"><span>Tema</span><small id="valTheme"></small><b>›</b></button>
+      <button class="set-item" data-go="chart" type="button"><span>Tipo de gráfica</span><small id="valChart"></small><b>›</b></button>
       <button class="set-item" data-go="colors" type="button"><span>Editor de colores</span><small id="valCustom"></small><b>›</b></button>
       <button class="set-item" data-go="quick" type="button"><span>Opción rápida</span><small id="valQuick"></small><b>›</b></button>
       <button class="set-item" data-go="links" type="button"><span>Accesos directos</span><small id="valLinks"></small><b>›</b></button>
@@ -438,6 +464,52 @@
       <div class="sub" style="margin:12px 0 0;font-size:.78rem">Al importar, se reemplaza toda la información actual por la del archivo.</div>
     </div>
 
+    <div class="panel" id="pnlClan" hidden>
+      <label for="clName">Nombre del clan</label>
+      <input type="text" id="clName" maxlength="30" autocomplete="off" placeholder="Ej. Los Entrenadores">
+      <label for="clTag" style="display:block;margin-top:10px">Iniciales (como en el juego)</label>
+      <input type="text" id="clTag" maxlength="5" autocomplete="off" autocapitalize="characters" placeholder="Ej. ENT">
+      <div class="form-actions">
+        <button class="btn-del" id="clDel" type="button" hidden>Eliminar clan</button>
+        <button class="btn-done" id="clSave" type="button" style="margin-left:auto">Crear clan</button>
+      </div>
+      <div class="cl-sub" id="clMenu" hidden>
+        <button class="set-item" data-go="clPlayers" type="button"><span>Jugadores</span><small id="valClPl"></small><b>›</b></button>
+        <button class="set-item" data-go="clCapital" type="button"><span>Capital</span><small id="valClCap"></small><b>›</b></button>
+        <button class="set-item" data-go="clRoles" type="button"><span>Funciones</span><small id="valClRo"></small><b>›</b></button>
+      </div>
+    </div>
+
+    <div class="panel" id="pnlClPlayers" hidden>
+      <div class="sub" style="margin-bottom:10px">Los jugadores que forman parte de tu clan.</div>
+      <div id="clPList"></div>
+      <input type="text" id="clPName" maxlength="30" autocomplete="off" placeholder="Nombre del jugador">
+      <div class="form-actions" style="justify-content:flex-end"><button class="btn-done" id="clPAdd" type="button">Agregar</button></div>
+    </div>
+
+    <div class="panel" id="pnlClCapital" hidden>
+      <div class="wallet" style="margin-bottom:14px"><div class="label">Capital del clan</div><div class="wallet-amt" id="clCapAmt">$0</div></div>
+      <label for="clAmt">Cantidad</label>
+      <input type="number" id="clAmt" inputmode="numeric" min="0" step="1" placeholder="0">
+      <input type="text" id="clNote" maxlength="60" autocomplete="off" placeholder="Nota (opcional)" style="margin-top:10px">
+      <select class="sel" id="clWho" style="width:100%;max-width:100%;margin-top:10px" aria-label="Jugador"></select>
+      <div class="form-actions" style="gap:10px">
+        <button class="btn-del" id="clRet" type="button">Retirar</button>
+        <button class="btn-done" id="clDep" type="button">Depositar</button>
+      </div>
+      <div class="set-name cl-sub">Movimientos</div>
+      <div id="clLog"></div>
+    </div>
+
+    <div class="panel" id="pnlClRoles" hidden>
+      <div class="set-name">Funciones disponibles</div>
+      <div id="clRList"></div>
+      <input type="text" id="clRName" maxlength="24" autocomplete="off" placeholder="Nueva función (ej. Tesorero)">
+      <div class="form-actions" style="justify-content:flex-end"><button class="btn-done" id="clRAdd" type="button">Agregar</button></div>
+      <div class="set-name cl-sub">Función de cada miembro</div>
+      <div id="clAssign"></div>
+    </div>
+
     <div class="panel" id="pnlMoney" hidden>
       <div class="sub" style="margin-bottom:12px">Escribe cuánto dinero tienes ahora. Desde ahí se actualiza solo: suma tus ganancias y resta tus gastos.</div>
       <label for="mnAmt">Dinero que tengo ($)</label>
@@ -454,6 +526,28 @@
       <div class="cu-row"><span>Acento</span><code id="cuAcHex"></code><input type="color" id="cuAc" aria-label="Color de acento"></div>
       <div class="cu-pre" id="cuAcPre"></div>
       <button class="btn-clear" id="cuReset" type="button">Restablecer colores</button>
+    </div>
+
+    <div class="panel" id="pnlChart" hidden>
+      <div class="sub" style="margin-bottom:14px">Elige cómo se dibuja la gráfica de Inicio. Se guarda solo.</div>
+      <div class="ct-grid">
+        <button class="ct" type="button" data-ct="barras">
+          <svg viewBox="0 0 48 32" fill="currentColor"><rect x="5" y="16" width="9" height="13" rx="2.5"/><rect x="19.5" y="5" width="9" height="24" rx="2.5"/><rect x="34" y="11" width="9" height="18" rx="2.5"/></svg>
+          Barras
+        </button>
+        <button class="ct" type="button" data-ct="flechas">
+          <svg viewBox="0 0 48 32" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M10 28V6M4 12l6-7 6 7"/><path d="M24 4v22M18 20l6 7 6-7"/><path d="M38 28V16M33 21l5-6 5 6"/></svg>
+          Flechas
+        </button>
+        <button class="ct" type="button" data-ct="puntos">
+          <svg viewBox="0 0 48 32" fill="currentColor"><polyline points="7,23 19,10 31,18 42,7" fill="none" stroke="currentColor" stroke-opacity=".45" stroke-width="1.5"/><circle cx="7" cy="23" r="4"/><circle cx="19" cy="10" r="4"/><circle cx="31" cy="18" r="4"/><circle cx="42" cy="7" r="4"/></svg>
+          Puntos
+        </button>
+        <button class="ct" type="button" data-ct="pastel">
+          <svg viewBox="0 0 48 32" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><circle cx="24" cy="16" r="12"/><path d="M24 16V4M24 16l10 7" /><path d="M24 16V4A12 12 0 0 1 34 23Z" fill="currentColor"/></svg>
+          Pastel
+        </button>
+      </div>
     </div>
 
     <div class="panel" id="pnlTheme" hidden>
@@ -515,10 +609,12 @@
     <div class="panel" id="gpMain">
       <button class="g-item" data-gg="colors" type="button"><span>Colores RGB<em class="gd">Los colores hexadecimales del botón + y del perfil</em></span><b>›</b></button>
       <button class="g-item" data-gg="home" type="button"><span>Inicio y Historial<em class="gd">Cómo registrar ganancias y ver tus días</em></span><b>›</b></button>
+      <button class="g-item" data-gg="charts" type="button"><span>Tipos de gráfica<em class="gd">Cómo leer Barras, Flechas, Puntos y Pastel</em></span><b>›</b></button>
       <button class="g-item" data-gg="expenses" type="button"><span>Gastos<em class="gd">Anota lo que gastas</em></span><b>›</b></button>
       <button class="g-item" data-gg="money" type="button"><span>Dinero que tengo<em class="gd">Tu saldo, siempre al día</em></span><b>›</b></button>
       <button class="g-item" data-gg="quick" type="button"><span>Opción rápida y accesos<em class="gd">Atajos para ahorrar toques</em></span><b>›</b></button>
       <button class="g-item" data-gg="more" type="button"><span>Buscar, deshacer y Excel<em class="gd">Funciones para ahorrar tiempo</em></span><b>›</b></button>
+      <button class="g-item" data-gg="clan" type="button"><span>Clan<em class="gd">Jugadores, capital y funciones</em></span><b>›</b></button>
       <button class="g-item" data-gg="account" type="button"><span>Cuenta y copia de seguridad<em class="gd">Foto, nombre, importar y exportar</em></span><b>›</b></button>
     </div>
 
@@ -536,7 +632,27 @@
     <div class="panel" id="gpHome" hidden>
       <p class="gp"><b>Inicio:</b> toca el botón <b>+</b> para crear una ganancia con el dinero recaudado y la cantidad vendida. Arriba ves el total del día y el total ganado.</p>
       <p class="gp"><b>Historial:</b> revisa tus días anteriores y las gráficas de lo que has ganado.</p>
+      <p class="gp"><b>Tipo de gráfica:</b> en <b>Ajustes → Tipo de gráfica</b> eliges cómo se ve: Barras, Flechas, Puntos o Pastel. Mira cómo leer cada una en la sección <b>Tipos de gráfica</b> de esta guía.</p>
       <p class="gp"><b>Moverte rápido:</b> desliza la pantalla hacia los lados para cambiar entre Inicio, Historial y Gastos.</p>
+    </div>
+
+    <div class="panel" id="gpCharts" hidden>
+      <p class="gp">Para cambiar la gráfica ve a <b>Ajustes → Tipo de gráfica</b> y toca la que quieras. Las cuatro muestran tus ganancias por día. Arriba de la gráfica puedes alternar entre <b>Ganancia</b> y <b>Objetos</b>, y con <b>Ver tabla</b> ves los números en una lista.</p>
+
+      <div class="set-name" style="margin-top:16px">Barras</div>
+      <p class="gp">Cada día es una columna que sale de la línea del cero. Es <b>verde</b> si ese día ganaste más que el día anterior y <b>roja</b> si ganaste menos. Si el día terminó en pérdida, la columna baja por debajo del cero. El número va encima de cada columna.</p>
+
+      <div class="set-name" style="margin-top:16px">Flechas</div>
+      <p class="gp">Cada día es una flecha que va del valor del día anterior al valor de ese día. <b>↑ Verde:</b> subió. <b>↓ Roja:</b> bajó. <b>Raya corta:</b> quedó igual. Mientras más larga la flecha, mayor el cambio. El <b>punto azul</b> es el primer día, que no tiene día anterior. Las líneas punteadas unen un día con el siguiente.</p>
+
+      <div class="set-name" style="margin-top:16px">Puntos</div>
+      <p class="gp">Cada día es un punto colocado a su altura: mientras más alto, más ganaste, y por debajo de la línea del cero es pérdida. El punto es <b>verde</b> si subió, <b>rojo</b> si bajó y <b>azul</b> el primer día. Una línea suave los une para que veas hacia dónde va la tendencia.</p>
+
+      <div class="set-name" style="margin-top:16px">Pastel</div>
+      <p class="gp">Cada porción es un día con ganancia: mientras más grande, mayor parte de tu total. Dentro de la porción ves el porcentaje y debajo hay una lista con la fecha, el monto y el porcentaje de cada día. Los días con pérdida o sin ganancia no aparecen y se avisa cuántos fueron. Si tienes más de 8 días, los 7 mayores salen aparte y el resto se junta en <b>Otros</b>.</p>
+
+      <div class="set-name" style="margin-top:16px">Colores de los números</div>
+      <p class="gp">En todas las gráficas los números de <b>ganancia</b> se ven en <b>verde</b> y los de <b>pérdida</b> en <b>rojo</b>.</p>
     </div>
 
     <div class="panel" id="gpExpenses" hidden>
@@ -545,7 +661,7 @@
     </div>
 
     <div class="panel" id="gpMoney" hidden>
-      <p class="gp">Se ve arriba de todo, sobre "Mis Ganancias". Para cambiarlo ve a <b>Ajustes → Dinero que tengo</b> y escribe cuánto tienes ahora.</p>
+      <p class="gp">Se ve arriba de todo, sobre "ADMMO". Para cambiarlo ve a <b>Ajustes → Dinero que tengo</b> y escribe cuánto tienes ahora.</p>
       <p class="gp">Desde ahí se actualiza solo: suma tus ganancias y resta tus gastos.</p>
     </div>
 
@@ -559,6 +675,13 @@
       <p class="gp"><b>Deshacer:</b> al borrar una ganancia, un gasto, un día, el historial, una opción rápida o un acceso, aparece un aviso con el botón <b>Deshacer</b> por unos segundos.</p>
       <p class="gp"><b>Editor de colores:</b> en Ajustes eliges tu propio color de fondo y de acento.</p>
       <p class="gp"><b>Excel:</b> en Ajustes → Cuenta, el botón <b>Exportar a Excel</b> crea un archivo .xlsx con las hojas Resumen, Ganancias y Gastos.</p>
+    </div>
+
+    <div class="panel" id="gpClan" hidden>
+      <p class="gp">En <b>Ajustes → Clan</b> pones el nombre de tu clan y sus iniciales, como en el juego.</p>
+      <p class="gp"><b>Jugadores:</b> agrega o quita a los miembros.</p>
+      <p class="gp"><b>Capital:</b> lleva el dinero del clan con depósitos y retiros, y un registro de cada movimiento.</p>
+      <p class="gp"><b>Funciones:</b> crea funciones (Líder, Oficial, Tesorero...) y elige cuál tiene cada miembro.</p>
     </div>
 
     <div class="panel" id="gpAccount" hidden>
@@ -603,6 +726,13 @@
     return (r < 0 ? '−' : '') + '$' + Math.abs(r).toLocaleString('es', {maximumFractionDigits:0});
   }
   function fmtNum(n){ return Math.round(n).toLocaleString('es', {maximumFractionDigits:0}); }
+  // Verde si es ganancia (> 0), rojo si es pérdida (< 0), sin color si es 0.
+  function signCls(n){ var r = Math.round(n); return r > 0 ? 'gain' : (r < 0 ? 'loss' : ''); }
+  function paint(node, n){
+    var r = Math.round(n);
+    node.classList.toggle('gain', r > 0);
+    node.classList.toggle('loss', r < 0);
+  }
   function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
   function parseDay(d){ return new Date(d + 'T00:00:00'); }
   function byId(id){ return document.getElementById(id); }
@@ -692,6 +822,7 @@
   function renderDayTotal(){
     var t = totalsFor(currentDate);
     byId('dayMoney').textContent = fmtMoney(t.money);
+    paint(byId('dayMoney'), t.money);
     byId('dayItems').textContent = fmtNum(t.items) + plural(t.items, ' objeto', ' objetos');
     var before = recordedDays().filter(function(d){ return d < currentDate; });
     var prev = before.length ? totalsFor(before[before.length-1]) : null;
@@ -705,9 +836,10 @@
     var m = 0, it = 0, sp = 0;
     rows.forEach(function(r){ m += r.money; it += r.items; sp += r.spent; });
     byId('grandMoney').textContent = fmtMoney(m);
+    paint(byId('grandMoney'), m);
     var bal = baseMoney + m, wm = byId('walletMoney');
     wm.textContent = fmtMoney(bal);
-    wm.classList.toggle('neg', Math.round(bal) < 0);
+    paint(wm, bal);
     byId('valMoney').textContent = fmtMoney(bal);
     byId('grandSub').textContent = 'Cantidad vendida: ' + fmtNum(it) +
       ' · ' + rows.length + plural(rows.length, ' día', ' días') + (sp > 0 ? ' · gastos ' + fmtMoney(sp) : '');
@@ -725,11 +857,97 @@
   function colorFor(tr){ return tr.dir === 'up' ? C_UP : (tr.dir === 'down' ? C_DOWN : C_FLAT); }
 
   var metric = 'money';
+
+  /* ---------- Tipo de gráfica ---------- */
+  var CHART_TYPES = {barras:'Barras', flechas:'Flechas', puntos:'Puntos', pastel:'Pastel'};
+  var CHKEY = 'tipo_grafica_v1', chartType = 'flechas';
+  try { var savedCt = localStorage.getItem(CHKEY); if(CHART_TYPES[savedCt]) chartType = savedCt; } catch(e) {}
+
+  var PIE_COLORS = ['#ff2d55','#ff9500','#ffe600','#2bff88','#00c3ff','#7a5cff'];
+  function pieColor(i){
+    var c = PIE_COLORS[i % PIE_COLORS.length], lap = Math.floor(i / PIE_COLORS.length);
+    return lap === 0 ? c : mixHex(c, lap === 1 ? '#000000' : '#ffffff', .3);
+  }
+
+  // Pastel: cada día con valor positivo es una porción; los días sobrantes se agrupan en "Otros".
+  function renderPie(rows, host){
+    var vals = rows.map(function(r){ return metric === 'money' ? r.money : r.items; });
+    var items = [], skipped = 0;
+    rows.forEach(function(r, i){
+      if(Math.round(vals[i]) > 0) items.push({date: r.date, v: vals[i]}); else skipped++;
+    });
+    if(!items.length){
+      var none = document.createElement('div');
+      none.className = 'chart-msg';
+      none.textContent = 'No hay valores positivos para el pastel.';
+      host.appendChild(none);
+      return;
+    }
+    items.sort(function(a, b){ return b.v - a.v; });
+    var MAXS = 7;
+    if(items.length > MAXS + 1){
+      var rest = items.slice(MAXS), sum = 0;
+      rest.forEach(function(x){ sum += x.v; });
+      items = items.slice(0, MAXS);
+      items.push({date: null, v: sum, other: rest.length});
+    }
+    var total = 0;
+    items.forEach(function(x){ total += x.v; });
+
+    var S = 200, R = 90, c = S / 2, ang = -Math.PI / 2;
+    var svg = sv('svg', {viewBox:'0 0 ' + S + ' ' + S, 'class':'chart', role:'img', 'aria-label':'Pastel de ganancias por día'}, null);
+    svg.style.width = S + 'px';
+    svg.style.margin = '0 auto';
+    var bg = cv('--bg');
+    items.forEach(function(x, i){
+      x.color = x.other ? '#8a8f99' : pieColor(i);
+      var frac = x.v / total, a2 = ang + frac * Math.PI * 2;
+      if(items.length === 1){
+        sv('circle', {cx:c, cy:c, r:R, fill:x.color}, svg);
+      } else {
+        var x1 = c + R * Math.cos(ang), y1 = c + R * Math.sin(ang), x2 = c + R * Math.cos(a2), y2 = c + R * Math.sin(a2);
+        sv('path', {d:'M' + c + ' ' + c + 'L' + x1 + ' ' + y1 + 'A' + R + ' ' + R + ' 0 ' + (frac > .5 ? 1 : 0) + ' 1 ' + x2 + ' ' + y2 + 'Z',
+          fill:x.color, stroke:bg, 'stroke-width':2, 'stroke-linejoin':'round'}, svg);
+      }
+      if(frac >= .08){
+        var mid = ang + frac * Math.PI;
+        var t = sv('text', {x:c + R * .62 * Math.cos(mid), y:c + R * .62 * Math.sin(mid) + 4, 'text-anchor':'middle', 'font-size':11, 'font-weight':800, fill:lum(x.color) > .5 ? '#111' : '#fff'}, svg);
+        t.textContent = Math.round(frac * 100) + '%';
+      }
+      ang = a2;
+    });
+    host.appendChild(svg);
+
+    var lg = document.createElement('div');
+    lg.className = 'pie-legend';
+    items.forEach(function(x){
+      var row = document.createElement('div'); row.className = 'pie-row';
+      var dot = document.createElement('i'); dot.style.background = x.color;
+      var nm = document.createElement('span');
+      nm.textContent = x.other ? 'Otros (' + x.other + plural(x.other, ' día', ' días') + ')' : shortDate(x.date);
+      var amt = document.createElement('b');
+      amt.textContent = metric === 'money' ? fmtMoney(x.v) : fmtNum(x.v);
+      if(metric === 'money') amt.className = 'gain';
+      var pc = document.createElement('small');
+      pc.textContent = Math.round(x.v / total * 100) + '%';
+      row.appendChild(dot); row.appendChild(nm); row.appendChild(amt); row.appendChild(pc);
+      lg.appendChild(row);
+    });
+    host.appendChild(lg);
+    if(skipped){
+      var note = document.createElement('div');
+      note.className = 'legend';
+      note.textContent = skipped + plural(skipped, ' día sin ganancia no se muestra', ' días sin ganancia no se muestran');
+      host.appendChild(note);
+    }
+    host.scrollLeft = 0;
+  }
   function cv(k){ return getComputedStyle(document.documentElement).getPropertyValue(k).trim(); }
 
   function renderChart(rows){
     var host = byId('chart');
     host.innerHTML = '';
+    byId('chartLegend').hidden = chartType === 'pastel';
     if(!rows.length){
       var m = document.createElement('div');
       m.className = 'chart-msg';
@@ -737,6 +955,7 @@
       host.appendChild(m);
       return;
     }
+    if(chartType === 'pastel'){ renderPie(rows, host); return; }
     var cols = {up:cv('--up'), down:cv('--down'), same:cv('--flat'), first:cv('--blue-l')};
     var vals = rows.map(function(r){ return metric === 'money' ? r.money : r.items; });
     var H = 210, padL = 14, padR = 14, padT = 28, padB = 36, slot = 46, minW = 320;
@@ -753,12 +972,48 @@
     svg.style.width = W > minW ? W + 'px' : '100%';
     sv('line', {x1:padL-6, x2:W-padR+6, y1:zero, y2:zero, stroke:cv('--axis'), 'stroke-width':1}, svg);
 
+    var AH = 9, SW = 3.5;
+    if(chartType === 'flechas'){
+      // Líneas punteadas que unen el final de una flecha con el inicio de la siguiente
+      for(var k = 1; k < n; k++){
+        var yk = Y(vals[k-1]);
+        sv('line', {x1:padL + slotW * (k - .5) + 7, x2:padL + slotW * (k + .5) - 7, y1:yk, y2:yk, stroke:cv('--axis'), 'stroke-width':1.5, 'stroke-dasharray':'3 4'}, svg);
+      }
+    } else if(chartType === 'puntos' && n > 1){
+      // Línea suave que une los puntos
+      var pts = vals.map(function(val, j){ return (padL + slotW * (j + .5)) + ',' + Y(val); }).join(' ');
+      sv('polyline', {points:pts, fill:'none', stroke:cv('--muted'), 'stroke-opacity':.5, 'stroke-width':1.5, 'stroke-linejoin':'round'}, svg);
+    }
+
     rows.forEach(function(r, i){
       var tr = trend(vals[i], i > 0 ? vals[i-1] : null, fmtNum);
       var cx = padL + slotW * (i + .5), neg = vals[i] < 0;
-      var h = Math.max(4, Math.abs(zero - Y(vals[i])));
-      sv('rect', {x:cx - bw/2, y:neg ? zero : zero - h, width:bw, height:h, rx:6, fill:cols[tr.dir]}, svg);
-      var v = sv('text', {x:cx, y:neg ? zero + h + 13 : zero - h - 7, 'text-anchor':'middle', 'font-size':10, 'font-weight':700, fill:cv('--text')}, svg);
+      var yEnd = Y(vals[i]), labelY;
+      if(chartType === 'barras'){
+        // Barras: una columna por día, desde la línea del cero
+        var h = Math.max(4, Math.abs(zero - yEnd));
+        sv('rect', {x:cx - bw/2, y:neg ? zero : zero - h, width:bw, height:h, rx:6, fill:cols[tr.dir]}, svg);
+        labelY = neg ? zero + h + 13 : zero - h - 7;
+      } else if(chartType === 'puntos'){
+        // Puntos: un punto por día, del color de la subida/bajada
+        sv('circle', {cx:cx, cy:yEnd, r:6, fill:cols[tr.dir]}, svg);
+        labelY = neg ? yEnd + 19 : yEnd - 11;
+      } else if(tr.dir === 'first'){
+        sv('circle', {cx:cx, cy:yEnd, r:6, fill:cols.first}, svg);
+        labelY = neg ? yEnd + 19 : yEnd - 11;
+      } else if(tr.dir === 'same'){
+        sv('line', {x1:cx - 9, x2:cx + 9, y1:yEnd, y2:yEnd, stroke:cols.same, 'stroke-width':SW, 'stroke-linecap':'round'}, svg);
+        labelY = yEnd - 9;
+      } else {
+        var up = tr.dir === 'up', dir = up ? -1 : 1;           // en pantalla, subir = y menor
+        var yStart = Y(vals[i-1]);
+        if(Math.abs(yEnd - yStart) < AH + 6) yStart = yEnd - dir * (AH + 6);   // flecha mínima visible
+        var base = yEnd - dir * AH;                             // donde arranca la punta
+        sv('line', {x1:cx, x2:cx, y1:yStart, y2:base, stroke:cols[tr.dir], 'stroke-width':SW, 'stroke-linecap':'round'}, svg);
+        sv('polygon', {points:cx + ',' + yEnd + ' ' + (cx - 7) + ',' + base + ' ' + (cx + 7) + ',' + base, fill:cols[tr.dir], stroke:cols[tr.dir], 'stroke-width':1.5, 'stroke-linejoin':'round'}, svg);
+        labelY = up ? yEnd - 8 : yEnd + 17;
+      }
+      var v = sv('text', {x:cx, y:labelY, 'text-anchor':'middle', 'font-size':10, 'font-weight':700, fill:(metric === 'money' && Math.round(vals[i]) !== 0) ? (neg ? cv('--loss') : cv('--gain')) : cv('--text')}, svg);
       v.textContent = (neg ? '−' : '') + fmtNum(Math.abs(vals[i]));
       var t = sv('text', {x:cx, y:H - 8, 'text-anchor':'middle', 'font-size':10, fill:cv('--muted')}, svg);
       t.textContent = shortDate(r.date);
@@ -773,8 +1028,8 @@
     if(!rows.length){ host.innerHTML = '<div class="chart-msg">Todavía no hay datos.</div>'; return; }
     var h = '<table class="tbl"><tr><th>Fecha</th><th class="r">Ganancia</th><th class="r">Gastos</th><th class="r">Objetos</th></tr>';
     rows.slice().reverse().forEach(function(r){
-      h += '<tr><td>' + shortDate(r.date) + '</td><td class="r">' + fmtMoney(r.money) + '</td><td class="r">' +
-        (r.spent > 0 ? fmtMoney(r.spent) : '—') + '</td><td class="r">' + fmtNum(r.items) + '</td></tr>';
+      h += '<tr><td>' + shortDate(r.date) + '</td><td class="r ' + signCls(r.money) + '">' + fmtMoney(r.money) + '</td><td class="r' +
+        (r.spent > 0 ? ' loss' : '') + '">' + (r.spent > 0 ? fmtMoney(r.spent) : '—') + '</td><td class="r">' + fmtNum(r.items) + '</td></tr>';
     });
     host.innerHTML = h + '</table>';
   }
@@ -834,7 +1089,7 @@
       main.appendChild(st); main.appendChild(sm);
 
       var right = document.createElement('div'); right.className = 'ent-right';
-      var amt = document.createElement('span'); amt.className = 'ent-amt'; amt.textContent = fmtMoney(r.money);
+      var amt = document.createElement('span'); amt.className = 'ent-amt'; amt.textContent = fmtMoney(r.money); paint(amt, r.money);
       var pl = document.createElement('span');
       if(r.tm.dir === 'first'){
         pl.className = 'pill flat'; pl.textContent = 'Primer día';
@@ -911,7 +1166,7 @@
     sm.textContent = fmtNum(num(e.items)) + plural(num(e.items), ' objeto', ' objetos');
     main.appendChild(st); main.appendChild(sm);
     var right = document.createElement('div'); right.className = 'ent-right';
-    var amt = document.createElement('span'); amt.className = 'ent-amt'; amt.textContent = fmtMoney(num(e.money));
+    var amt = document.createElement('span'); amt.className = 'ent-amt'; amt.textContent = fmtMoney(num(e.money)); paint(amt, num(e.money));
     right.appendChild(amt);
     b.appendChild(main); b.appendChild(right);
     b.addEventListener('click', function(){ startEditing(e.id); });
@@ -1086,7 +1341,7 @@
     if(cs && HEXRE.test(cs.accent)) custom.accent = cs.accent;
   } catch(e) {}
   THEME_BG.custom = custom.bg;
-  var CVARS = ['--bg','--grad','--nav','--blue','--blue-l','--onacc','--chip','--chipx','--text','--muted','--surface','--surface2','--line','--input','--inputline','--form','--up','--down','--upx','--downx','--flat','--axis','--shadow','color-scheme'];
+  var CVARS = ['--bg','--grad','--nav','--blue','--blue-l','--onacc','--chip','--chipx','--text','--muted','--surface','--surface2','--line','--input','--inputline','--form','--up','--down','--upx','--downx','--flat','--axis','--shadow','--gain','--loss','color-scheme'];
   function rgbOf(h){ var n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
   function mixHex(a, b, t){
     var x = rgbOf(a), y = rgbOf(b);
@@ -1111,6 +1366,7 @@
       v['--inputline'] = 'rgba(0,0,0,.2)'; v['--form'] = 'rgba(255,255,255,.85)'; v['--up'] = '#168a4a'; v['--down'] = '#d12f3f';
       v['--upx'] = '#0f7a3f'; v['--downx'] = '#b82233'; v['--flat'] = '#7a7f8a'; v['--axis'] = 'rgba(0,0,0,.18)';
       v['--shadow'] = '0 1px 3px rgba(0,0,0,.12)'; v['color-scheme'] = 'light';
+      v['--gain'] = '#0f7a3f'; v['--loss'] = '#b82233';
     }
     CVARS.forEach(function(k){ if(v[k] != null) st.setProperty(k, v[k]); else st.removeProperty(k); });
   }
@@ -1164,6 +1420,7 @@
     var l = expList(currentDate), host = byId('expList');
     host.innerHTML = '';
     byId('expTotal').textContent = fmtMoney(spentFor(currentDate));
+    byId('expTotal').classList.toggle('loss', spentFor(currentDate) > 0);
     if(!l.length){
       var box = document.createElement('div'); box.className = 'empty';
       box.textContent = 'Aún no hay gastos en este día.';
@@ -1179,7 +1436,7 @@
       if(tg.color) st.style.color = tg.color;
       main.appendChild(st);
       var right = document.createElement('div'); right.className = 'ent-right';
-      var amt = document.createElement('span'); amt.className = 'ent-amt'; amt.style.color = 'var(--downx)';
+      var amt = document.createElement('span'); amt.className = 'ent-amt loss';
       amt.textContent = '−' + fmtMoney(num(x.money));
       var del = document.createElement('button'); del.type = 'button'; del.className = 'btn-del'; del.textContent = 'Eliminar';
       del.addEventListener('click', function(){
@@ -1487,21 +1744,21 @@
       app: 'mis-ganancias', version: 1, exported: new Date().toISOString(),
       data: {
         ganancias: all, gastos: exps, rapidas: quickList, accesos: linkList,
-        dinero_base: baseMoney, perfil: profile, tema: theme, colores: custom
+        dinero_base: baseMoney, perfil: profile, tema: theme, colores: custom, clan: clan, grafica: chartType
       }
     };
   }
 
   function exportAccount(){
     var json = JSON.stringify(buildBackup(), null, 2);
-    deliverBlob(new Blob([json], {type: 'application/json'}), 'mis-ganancias-' + todayStr() + '.json');
+    deliverBlob(new Blob([json], {type: 'application/json'}), 'admmo-' + todayStr() + '.json');
   }
   function deliverBlob(blob, fname){
     var mobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     try {
       var file = new File([blob], fname, {type: blob.type});
       if(mobile && navigator.canShare && navigator.canShare({files: [file]})){
-        navigator.share({files: [file], title: 'Mis Ganancias'}).then(function(){
+        navigator.share({files: [file], title: 'ADMMO'}).then(function(){
           toast('Archivo exportado');
         }).catch(function(err){
           if(!err || err.name !== 'AbortError') downloadBlob(blob, fname);
@@ -1543,6 +1800,7 @@
       nProf = {name: d.perfil.name.slice(0, 30), photo: ph};
     }
 
+    clan = sanitizeClan(d.clan);
     all = nAll; exps = nExp; quickList = nQuick; linkList = nLinks; baseMoney = nBase; profile = nProf;
     editingId = null;
     entries = all[currentDate] || [];
@@ -1552,6 +1810,11 @@
       saveCustom();
     }
     if(THEME_BG[d.tema]) theme = d.tema;
+    if(CHART_TYPES[d.grafica]){
+      chartType = d.grafica;
+      try { localStorage.setItem(CHKEY, chartType); } catch(e) {}
+      syncChartUi();
+    }
 
     try {
       localStorage.setItem(KEY, JSON.stringify(all));
@@ -1559,12 +1822,13 @@
       localStorage.setItem(QKEY, JSON.stringify(quickList));
       localStorage.setItem(LKEY, JSON.stringify(linkList));
       localStorage.setItem(BKEY, String(baseMoney));
+      saveClan();
       localStorage.setItem(THEME_KEY, theme);
       if(profile) localStorage.setItem(PKEY, JSON.stringify(profile)); else localStorage.removeItem(PKEY);
     } catch(e) { toast('No se pudo guardar todo en el dispositivo'); }
 
     applyTheme(theme);
-    renderQuick(); renderLinks(); renderProfile(); renderAll();
+    renderQuick(); renderLinks(); renderProfile(); renderAll(); renderClan(); loadClanPanel();
   }
 
   /* ---------- Exportar a Excel (.xlsx) ---------- */
@@ -1650,7 +1914,7 @@
       {name:'xl/worksheets/sheet2.xml', text: sheetXml(gRows, [14, 34, 14, 12])},
       {name:'xl/worksheets/sheet3.xml', text: sheetXml(eRows, [14, 34, 14])}
     ]);
-    deliverBlob(blob, 'mis-ganancias-' + todayStr() + '.xlsx');
+    deliverBlob(blob, 'admmo-' + todayStr() + '.xlsx');
   }
   byId('bkExcel').addEventListener('click', exportExcel);
 
@@ -1658,7 +1922,7 @@
   var undoSnap = null, undoT;
   function pushUndo(msg){
     all[currentDate] = entries;
-    undoSnap = JSON.stringify({all: all, exps: exps, quick: quickList, links: linkList});
+    undoSnap = JSON.stringify({all: all, exps: exps, quick: quickList, links: linkList, clan: clan});
     byId('undoMsg').textContent = msg;
     byId('undoBar').hidden = false;
     clearTimeout(undoT);
@@ -1678,8 +1942,9 @@
       localStorage.setItem(QKEY, JSON.stringify(quickList));
       localStorage.setItem(LKEY, JSON.stringify(linkList));
     } catch(e) {}
+    clan = sanitizeClan(snap.clan); saveClan();
     undoSnap = null; hideUndo();
-    renderQuick(); renderLinks(); renderAll();
+    renderQuick(); renderLinks(); renderAll(); renderClan(); loadClanPanel();
     toast('Restaurado');
   });
 
@@ -1730,7 +1995,7 @@
     fr.onload = function(){
       var parsed;
       try { parsed = JSON.parse(fr.result); } catch(e) { toast('El archivo no es válido'); return; }
-      if(!isObj(parsed) || parsed.app !== 'mis-ganancias' || !isObj(parsed.data)){ toast('Ese archivo no es una cuenta de Mis Ganancias'); return; }
+      if(!isObj(parsed) || parsed.app !== 'mis-ganancias' || !isObj(parsed.data)){ toast('Ese archivo no es una cuenta de ADMMO'); return; }
       if(!confirm('¿Importar esta cuenta? Se reemplazará toda la información actual por la del archivo.')) return;
       try { applyBackup(parsed); toast('Cuenta importada'); showPanel('main'); }
       catch(e) { toast('No se pudo importar el archivo'); }
@@ -1814,8 +2079,8 @@
   })();
 
   var $guide = byId('guide');
-  var GPANELS = {main:'gpMain', colors:'gpColors', home:'gpHome', expenses:'gpExpenses', money:'gpMoney', quick:'gpQuick', more:'gpMore', account:'gpAccount'};
-  var GTITLES = {main:'Guía', colors:'Colores RGB', home:'Inicio y Historial', expenses:'Gastos', money:'Dinero que tengo', quick:'Opción rápida y accesos', more:'Buscar, deshacer y Excel', account:'Cuenta y copia de seguridad'};
+  var GPANELS = {main:'gpMain', colors:'gpColors', home:'gpHome', charts:'gpCharts', expenses:'gpExpenses', money:'gpMoney', quick:'gpQuick', more:'gpMore', clan:'gpClan', account:'gpAccount'};
+  var GTITLES = {main:'Guía', colors:'Colores RGB', home:'Inicio y Historial', charts:'Tipos de gráfica', expenses:'Gastos', money:'Dinero que tengo', quick:'Opción rápida y accesos', more:'Buscar, deshacer y Excel', clan:'Clan', account:'Cuenta y copia de seguridad'};
   function showGuide(name){
     Object.keys(GPANELS).forEach(function(k){ byId(GPANELS[k]).hidden = k !== name; });
     byId('gTitle').textContent = GTITLES[name];
@@ -1832,20 +2097,268 @@
     b.addEventListener('click', function(){ showGuide(b.getAttribute('data-gg')); });
   });
 
+  /* ---------- Clan ---------- */
+  var CLKEY = 'clan_v1', clan = null;
+  function sanitizeClan(c){
+    if(!isObj(c)) return null;
+    var roles = (Array.isArray(c.roles) ? c.roles : []).filter(isObj).map(function(r){
+      return {id: String(r.id || uid()), name: String(r.name || '').slice(0, 24)};
+    }).filter(function(r){ return r.name; });
+    var rid = {}; roles.forEach(function(r){ rid[r.id] = 1; });
+    var players = (Array.isArray(c.players) ? c.players : []).filter(isObj).map(function(pl){
+      return {id: String(pl.id || uid()), name: String(pl.name || '').slice(0, 30), role: rid[pl.role] ? pl.role : ''};
+    }).filter(function(pl){ return pl.name; });
+    var pid = {}; players.forEach(function(pl){ pid[pl.id] = 1; });
+    var log = (Array.isArray(c.log) ? c.log : []).filter(isObj).map(function(m){
+      return {id: String(m.id || uid()), t: m.t === 'ret' ? 'ret' : 'dep', amount: Math.round(num(m.amount)),
+        note: String(m.note || '').slice(0, 60), who: pid[m.who] ? m.who : '', date: String(m.date || '').slice(0, 10)};
+    }).filter(function(m){ return m.amount > 0; });
+    return {name: String(c.name || '').slice(0, 30), tag: String(c.tag || '').toUpperCase().slice(0, 5), roles: roles, players: players, log: log};
+  }
+  try { clan = sanitizeClan(JSON.parse(localStorage.getItem(CLKEY))); } catch(e) { clan = null; }
+  function saveClan(){
+    try { if(clan) localStorage.setItem(CLKEY, JSON.stringify(clan)); else localStorage.removeItem(CLKEY); } catch(e) {}
+  }
+  function clanCapital(){
+    var t = 0;
+    if(clan) clan.log.forEach(function(m){ t += m.t === 'dep' ? m.amount : -m.amount; });
+    return t;
+  }
+  function roleName(id){
+    var n = '';
+    if(clan) clan.roles.forEach(function(r){ if(r.id === id) n = r.name; });
+    return n;
+  }
+  function playerName(id){
+    var n = '';
+    if(clan) clan.players.forEach(function(pl){ if(pl.id === id) n = pl.name; });
+    return n;
+  }
+  function clEmpty(host, text){
+    var b = document.createElement('div'); b.className = 'empty'; b.textContent = text; host.appendChild(b);
+  }
+  function clRow(title, subtitle){
+    var row = document.createElement('div'); row.className = 'ent'; row.style.cursor = 'default';
+    var main = document.createElement('div'); main.className = 'ent-main';
+    var st = document.createElement('strong'); st.textContent = title; main.appendChild(st);
+    if(subtitle){ var sm = document.createElement('small'); sm.textContent = subtitle; main.appendChild(sm); }
+    var right = document.createElement('div'); right.className = 'ent-right';
+    row.appendChild(main); row.appendChild(right);
+    return {row: row, main: main, right: right, title: st};
+  }
+  function clDelBtn(fn){
+    var del = document.createElement('button'); del.type = 'button'; del.className = 'btn-del'; del.textContent = 'Eliminar';
+    del.addEventListener('click', fn);
+    return del;
+  }
+
+  function renderClan(){
+    byId('valClan').textContent = clan ? '[' + clan.tag + '] ' + clan.name : 'Sin crear';
+    byId('clMenu').hidden = !clan;
+    if(!clan){
+      ['clPList','clRList','clAssign','clLog'].forEach(function(id){ byId(id).innerHTML = ''; });
+      byId('clCapAmt').textContent = fmtMoney(0);
+      return;
+    }
+    byId('valClPl').textContent = String(clan.players.length);
+    byId('valClCap').textContent = fmtMoney(clanCapital());
+    byId('valClRo').textContent = String(clan.roles.length);
+
+    // Jugadores
+    var host = byId('clPList'); host.innerHTML = '';
+    if(!clan.players.length) clEmpty(host, 'Aún no hay jugadores.');
+    clan.players.forEach(function(pl){
+      var r = clRow(pl.name, roleName(pl.role) || 'Sin función');
+      r.right.appendChild(clDelBtn(function(){
+        pushUndo('Jugador eliminado');
+        clan.players = clan.players.filter(function(x){ return x.id !== pl.id; });
+        clan.log.forEach(function(m){ if(m.who === pl.id) m.who = ''; });
+        saveClan(); renderClan();
+      }));
+      host.appendChild(r.row);
+    });
+
+    // Funciones
+    host = byId('clRList'); host.innerHTML = '';
+    if(!clan.roles.length) clEmpty(host, 'Aún no hay funciones.');
+    clan.roles.forEach(function(ro){
+      var n = clan.players.filter(function(x){ return x.role === ro.id; }).length;
+      var r = clRow(ro.name, n + plural(n, ' miembro', ' miembros'));
+      r.right.appendChild(clDelBtn(function(){
+        pushUndo('Función eliminada');
+        clan.roles = clan.roles.filter(function(x){ return x.id !== ro.id; });
+        clan.players.forEach(function(x){ if(x.role === ro.id) x.role = ''; });
+        saveClan(); renderClan();
+      }));
+      host.appendChild(r.row);
+    });
+
+    // Asignar función a cada miembro
+    host = byId('clAssign'); host.innerHTML = '';
+    if(!clan.players.length) clEmpty(host, 'Agrega jugadores para asignarles una función.');
+    clan.players.forEach(function(pl){
+      var r = clRow(pl.name);
+      var sel = document.createElement('select'); sel.className = 'sel';
+      sel.setAttribute('aria-label', 'Función de ' + pl.name);
+      var o0 = document.createElement('option'); o0.value = ''; o0.textContent = 'Sin función'; sel.appendChild(o0);
+      clan.roles.forEach(function(ro){
+        var o = document.createElement('option'); o.value = ro.id; o.textContent = ro.name; sel.appendChild(o);
+      });
+      sel.value = pl.role || '';
+      sel.addEventListener('change', function(){
+        pl.role = sel.value; saveClan();
+        byId('valClRo').textContent = String(clan.roles.length);
+        // refrescar textos de las otras listas sin reconstruir este selector
+        renderClanLists();
+      });
+      r.right.appendChild(sel);
+      host.appendChild(r.row);
+    });
+
+    // Capital
+    byId('clCapAmt').textContent = fmtMoney(clanCapital());
+    paint(byId('clCapAmt'), clanCapital());
+    var who = byId('clWho'), keep = who.value;
+    who.innerHTML = '';
+    var w0 = document.createElement('option'); w0.value = ''; w0.textContent = 'Jugador (opcional)'; who.appendChild(w0);
+    clan.players.forEach(function(pl){
+      var o = document.createElement('option'); o.value = pl.id; o.textContent = pl.name; who.appendChild(o);
+    });
+    who.value = playerName(keep) ? keep : '';
+    host = byId('clLog'); host.innerHTML = '';
+    if(!clan.log.length) clEmpty(host, 'Aún no hay movimientos.');
+    clan.log.slice().reverse().slice(0, 40).forEach(function(m){
+      var parts = [];
+      if(m.who && playerName(m.who)) parts.push(playerName(m.who));
+      if(m.note) parts.push(m.note);
+      if(m.date){ var dd = parseDay(m.date); parts.push(dd.toLocaleDateString('es', {day:'numeric', month:'short'}).replace('.', '')); }
+      var r = clRow((m.t === 'dep' ? '+' : '−') + fmtMoney(m.amount), parts.join(' · '));
+      r.title.style.color = m.t === 'dep' ? 'var(--gain)' : 'var(--loss)';
+      r.right.appendChild(clDelBtn(function(){
+        pushUndo('Movimiento eliminado');
+        clan.log = clan.log.filter(function(x){ return x.id !== m.id; });
+        saveClan(); renderClan();
+      }));
+      host.appendChild(r.row);
+    });
+  }
+  // Actualiza solo textos de resumen y de la lista de jugadores/funciones (sin tocar los selectores)
+  function renderClanLists(){
+    var keepAssign = byId('clAssign').innerHTML, scroll = document.querySelector('.sheet').scrollTop;
+    var tmp = byId('clAssign');
+    var kids = Array.prototype.slice.call(tmp.childNodes);
+    renderClan();
+    // restaurar los selectores originales para no perder el foco del que se está usando
+    var fresh = byId('clAssign');
+    fresh.innerHTML = '';
+    kids.forEach(function(k){ fresh.appendChild(k); });
+    document.querySelector('.sheet').scrollTop = scroll;
+  }
+
+  function loadClanPanel(){
+    byId('clName').value = clan ? clan.name : '';
+    byId('clTag').value = clan ? clan.tag : '';
+    byId('clDel').hidden = !clan;
+    byId('clSave').textContent = clan ? 'Guardar cambios' : 'Crear clan';
+    renderClan();
+  }
+  byId('clTag').addEventListener('input', function(){
+    this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  });
+  byId('clSave').addEventListener('click', function(){
+    var name = byId('clName').value.trim(), tag = byId('clTag').value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if(!name){ byId('clName').focus(); toast('Escribe el nombre del clan'); return; }
+    if(!tag){ byId('clTag').focus(); toast('Escribe las iniciales'); return; }
+    var isNew = !clan;
+    if(isNew) clan = {name: name, tag: tag, roles: [{id: uid(), name: 'Líder'}, {id: uid(), name: 'Oficial'}, {id: uid(), name: 'Miembro'}], players: [], log: []};
+    else { clan.name = name; clan.tag = tag; }
+    saveClan();
+    byId('clDel').hidden = false; byId('clSave').textContent = 'Guardar cambios';
+    renderClan();
+    toast(isNew ? 'Clan creado' : 'Clan guardado');
+  });
+  byId('clDel').addEventListener('click', function(){
+    if(!confirm('¿Eliminar el clan con sus jugadores, funciones y capital?')) return;
+    pushUndo('Clan eliminado');
+    clan = null; saveClan(); loadClanPanel();
+  });
+
+  function addPlayer(){
+    var n = byId('clPName').value.trim();
+    if(!n || !clan){ byId('clPName').focus(); return; }
+    var member = '';
+    clan.roles.forEach(function(r){ if(r.name.toLowerCase() === 'miembro') member = r.id; });
+    clan.players.push({id: uid(), name: n, role: member});
+    byId('clPName').value = '';
+    saveClan(); renderClan();
+    byId('clPName').focus();
+  }
+  byId('clPAdd').addEventListener('click', addPlayer);
+  byId('clPName').addEventListener('keydown', function(ev){ if(ev.key === 'Enter'){ ev.preventDefault(); addPlayer(); } });
+
+  function addRole(){
+    var n = byId('clRName').value.trim();
+    if(!n || !clan){ byId('clRName').focus(); return; }
+    clan.roles.push({id: uid(), name: n});
+    byId('clRName').value = '';
+    saveClan(); renderClan();
+    byId('clRName').focus();
+  }
+  byId('clRAdd').addEventListener('click', addRole);
+  byId('clRName').addEventListener('keydown', function(ev){ if(ev.key === 'Enter'){ ev.preventDefault(); addRole(); } });
+
+  function moveCapital(type){
+    if(!clan) return;
+    var a = whole(byId('clAmt').value);
+    if(a <= 0){ byId('clAmt').focus(); return; }
+    if(type === 'ret' && a > clanCapital()){ toast('No hay suficiente capital'); return; }
+    clan.log.push({id: uid(), t: type, amount: a, note: byId('clNote').value.trim(), who: byId('clWho').value, date: todayStr()});
+    byId('clAmt').value = ''; byId('clNote').value = '';
+    saveClan(); renderClan();
+    toast(type === 'dep' ? 'Depósito agregado' : 'Retiro agregado');
+  }
+  byId('clDep').addEventListener('click', function(){ moveCapital('dep'); });
+  byId('clRet').addEventListener('click', function(){ moveCapital('ret'); });
+  renderClan();
+
+  /* ---------- Ajuste: tipo de gráfica ---------- */
+  function syncChartUi(){
+    byId('valChart').textContent = CHART_TYPES[chartType];
+    Array.prototype.forEach.call(document.querySelectorAll('.ct'), function(b){
+      b.classList.toggle('on', b.getAttribute('data-ct') === chartType);
+    });
+  }
+  function setChartType(t){
+    if(!CHART_TYPES[t]) return;
+    chartType = t;
+    try { localStorage.setItem(CHKEY, t); } catch(e) {}
+    syncChartUi();
+    renderChart(buildRows());
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.ct'), function(b){
+    b.addEventListener('click', function(){ setChartType(b.getAttribute('data-ct')); });
+  });
+  syncChartUi();
+
   /* ---------- Apartados de Ajustes ---------- */
-  var PANELS = {main:'pnlMain', account:'pnlAccount', money:'pnlMoney', colors:'pnlColors', theme:'pnlTheme', quick:'pnlQuick', links:'pnlLinks'};
-  var PTITLES = {main:'Configuración', account:'Cuenta', money:'Dinero que tengo', colors:'Editor de colores', theme:'Tema', quick:'Opción rápida', links:'Accesos directos'};
+  var PANELS = {main:'pnlMain', clan:'pnlClan', clPlayers:'pnlClPlayers', clCapital:'pnlClCapital', clRoles:'pnlClRoles', account:'pnlAccount', money:'pnlMoney', colors:'pnlColors', theme:'pnlTheme', chart:'pnlChart', quick:'pnlQuick', links:'pnlLinks'};
+  var PARENT = {clPlayers:'clan', clCapital:'clan', clRoles:'clan'}, curPanel = 'main';
+  var PTITLES = {main:'Configuración', clan:'Clan', clPlayers:'Jugadores', clCapital:'Capital', clRoles:'Funciones', account:'Cuenta', money:'Dinero que tengo', colors:'Editor de colores', theme:'Tema', chart:'Tipo de gráfica', quick:'Opción rápida', links:'Accesos directos'};
   function showPanel(name){
     Object.keys(PANELS).forEach(function(k){ byId(PANELS[k]).hidden = k !== name; });
+    curPanel = name;
     byId('setTitle').textContent = PTITLES[name];
     byId('setBack').hidden = name === 'main';
     qReset(); lReset();
     if(name === 'account') loadAccountPanel();
+    if(name === 'clan') loadClanPanel();
+    if(PARENT[name]) renderClan();
     if(name === 'colors') syncColorUi();
+    if(name === 'chart') syncChartUi();
     if(name === 'money') byId('mnAmt').value = Math.round(baseMoney + netTotal());
     document.querySelector('.sheet').scrollTop = 0;
   }
-  byId('setBack').addEventListener('click', function(){ showPanel('main'); });
+  byId('setBack').addEventListener('click', function(){ showPanel(PARENT[curPanel] || 'main'); });
   Array.prototype.forEach.call(document.querySelectorAll('.set-item'), function(b){
     b.addEventListener('click', function(){ showPanel(b.getAttribute('data-go')); });
   });
