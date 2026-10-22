@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="azul">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#071c4f">
+<title>Mis Ganancias</title>
+<style>
+  :root{
+    --bg:#0b0b0d;--grad:linear-gradient(180deg,#17171b 0%,#0b0b0d 55%,#050506 100%);
+    --text:#fff;--muted:rgba(255,255,255,.6);--surface:rgba(255,255,255,.07);--surface2:rgba(255,255,255,.13);
+    --line:rgba(255,255,255,.1);--nav:rgba(11,11,13,.96);--chip:rgba(92,184,255,.18);--chipx:#bfe3ff;
+    --input:rgba(255,255,255,.07);--inputline:rgba(255,255,255,.14);--form:rgba(255,255,255,.1);
+    --blue:#2f7bff;--blue-l:#5cb8ff;--onacc:#fff;--up:#34d27b;--down:#ff5c6c;--upx:#6ee7a2;--downx:#ff8f9b;
+    --flat:#dbe7ff;--axis:rgba(255,255,255,.18);--shadow:none;color-scheme:dark;
+  }
+  :root[data-theme=azul]{
+    --bg:#071c4f;--grad:linear-gradient(180deg,#0b2d7a 0%,#071c4f 55%,#051237 100%);--nav:rgba(7,28,79,.96);
+  }
+  :root[data-theme=rojo]{
+    --bg:#4a0a12;--grad:linear-gradient(180deg,#7a0f1a 0%,#4a0a12 55%,#2b050a 100%);--nav:rgba(74,10,18,.96);
+    --chip:rgba(255,255,255,.16);--chipx:#ffd6d9;--blue:#e5303f;--blue-l:#ffd6d9;
+    --up:#5be39a;--down:#ff8a95;--upx:#8bf0b8;--downx:#ffb3ba;--flat:#ffe3e6;
+  }
+  :root[data-theme=verde]{
+    --bg:#084a28;--grad:linear-gradient(180deg,#0f6b3a 0%,#084a28 55%,#04301a 100%);--nav:rgba(8,74,40,.96);
+    --chip:rgba(255,255,255,.16);--chipx:#c9f7dc;--blue:#34d27b;--blue-l:#7ff0ae;--onacc:#04301a;
+    --up:#c4ffdc;--down:#ff7a86;--upx:#c4ffdc;--downx:#ffa3ab;--flat:#d9f7e6;
+  }
+  :root[data-theme=amarillo]{
+    --bg:#ffe97a;--grad:linear-gradient(180deg,#fff6c2 0%,#ffe97a 60%,#ffd93d 100%);
+    --text:#2b2100;--muted:rgba(43,33,0,.62);--surface:rgba(255,255,255,.6);--surface2:rgba(43,33,0,.09);
+    --line:rgba(43,33,0,.12);--nav:rgba(255,246,194,.96);--chip:rgba(43,33,0,.1);--chipx:#6b5200;
+    --input:rgba(255,255,255,.75);--inputline:rgba(43,33,0,.2);--form:#fffbe0;
+    --blue:#e0a800;--blue-l:#b88700;--onacc:#2b2100;--up:#168a4a;--down:#d12f3f;--upx:#0f7a3f;--downx:#b82233;
+    --flat:#8a7400;--axis:rgba(43,33,0,.18);--shadow:0 1px 3px rgba(43,33,0,.12);color-scheme:light;
+  }
+  :root[data-theme=blanco]{
+    --bg:#eef3ff;--grad:linear-gradient(180deg,#f7faff 0%,#e9f0ff 60%,#dce8ff 100%);
+    --text:#0b1b4a;--muted:rgba(11,27,74,.6);--surface:#fff;--surface2:#e6eeff;
+    --line:rgba(11,27,74,.1);--nav:rgba(255,255,255,.96);--chip:rgba(47,123,255,.12);--chipx:#1d5fe0;
+    --input:#fff;--inputline:rgba(11,27,74,.18);--form:#fff;
+    --up:#22b868;--down:#f0475b;--upx:#14935a;--downx:#d6354a;--flat:#8aa0cf;
+    --axis:rgba(11,27,74,.16);--shadow:0 1px 3px rgba(11,27,74,.1);color-scheme:light;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  [hidden]{display:none!important}
+  html{background:var(--bg)}
+  body{
+    margin:0;color:var(--text);min-height:100vh;
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    padding:22px 16px calc(120px + env(safe-area-inset-bottom));
+  }
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--grad)}
+  button{font-family:inherit}
+  .wrap{max-width:640px;margin:0 auto}
+
+  .label{font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  h1{margin:0 0 4px;font-size:1.6rem;font-weight:800;letter-spacing:-.02em}
+  h2{margin:0;font-size:1.05rem;font-weight:700}
+  .sub{font-size:.85rem;color:var(--muted);margin-bottom:18px}
+
+  /* Barra superior + modo oscuro/claro */
+  .top{display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+  .top h1{margin:0}
+
+  /* Tarjeta de gráfica */
+  .card{background:var(--surface);border-radius:18px;padding:16px 14px 12px;margin-bottom:20px;box-shadow:var(--shadow)}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .seg{display:inline-flex;margin:12px 0 4px;padding:3px;border-radius:999px;background:var(--surface2)}
+  .seg button{border:0;background:none;color:var(--muted);font-size:.8rem;font-weight:600;padding:7px 16px;border-radius:999px;cursor:pointer}
+  .seg button.on{background:var(--blue);color:var(--onacc)}
+  .chart-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px -4px 0}
+  svg.chart{display:block;height:auto}
+  .chart-msg{color:var(--muted);font-size:.88rem;text-align:center;padding:36px 0}
+  .legend{font-size:.72rem;color:var(--muted);text-align:center;margin:6px 0 2px}
+  .legend .u{color:var(--upx)} .legend .d{color:var(--downx)} .legend .f{color:var(--blue-l)}
+  .tbl{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:8px}
+  .tbl th{text-align:left;color:var(--muted);font-weight:600;font-size:.72rem;padding:6px 4px}
+  .tbl td{padding:9px 4px;border-top:1px solid var(--line)}
+  .tbl .r{text-align:right}
+
+  /* Total ganado */
+  .grand{margin-bottom:16px;text-align:center}
+  .grand-amt{font-size:2.6rem;font-weight:800;letter-spacing:-.03em;margin:2px 0;word-break:break-word}
+  .grand-sub{font-size:.84rem;color:var(--muted)}
+  .sep{border:0;height:1px;background:var(--line);margin:0 0 18px}
+
+  /* Día */
+  .date-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .dtitle{font-size:1.05rem;font-weight:700}
+  .date-ctrl{display:flex;align-items:center;gap:8px}
+  .chip{border:0;background:var(--chip);color:var(--chipx);font-size:.8rem;font-weight:600;padding:9px 14px;border-radius:999px;cursor:pointer}
+  .daytotal{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:14px}
+  .day-amt{font-size:1.7rem;font-weight:800;letter-spacing:-.02em}
+  .day-right{text-align:right}
+  .day-items{font-size:.85rem;color:var(--muted)}
+
+  .pill{display:inline-block;font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:999px;margin-top:4px}
+  .pill.up{background:rgba(52,210,123,.16);color:var(--upx)}
+  .pill.down{background:rgba(255,92,108,.18);color:var(--downx)}
+  .pill.flat{background:var(--surface2);color:var(--muted)}
+
+  input{
+    width:100%;background:var(--input);color:var(--text);
+    border:1px solid var(--inputline);border-radius:12px;
+    padding:12px 14px;font-size:16px;font-family:inherit;outline:none;
+  }
+  input:focus{border-color:var(--blue-l)}
+  input::placeholder{color:var(--muted);opacity:.6}
+  input[type=date]{width:auto;min-width:150px;padding:8px 12px;border-radius:999px}
+  label{display:block;font-size:.72rem;color:var(--muted);margin-bottom:6px}
+
+  .ent{
+    width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;
+    background:var(--surface);border:0;border-radius:14px;padding:13px 14px;margin-bottom:8px;
+    color:var(--text);cursor:pointer;box-shadow:var(--shadow);
+  }
+  .ent:active{background:var(--surface2)}
+  .ent-main{flex:1;min-width:0}
+  .ent-main strong{display:block;font-size:.95rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ent-main small{color:var(--muted);font-size:.75rem}
+  .ent-right{text-align:right}
+  .ent-amt{display:block;font-weight:700;font-size:1rem;white-space:nowrap}
+
+  .form{background:var(--form);border:1px solid var(--blue-l);border-radius:14px;padding:14px;margin-bottom:8px;box-shadow:var(--shadow)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  .form-actions{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+  .btn-done{background:var(--blue);color:var(--onacc);border:0;border-radius:999px;padding:10px 24px;font-weight:700;font-size:.9rem;cursor:pointer}
+  .btn-del{background:none;border:0;color:var(--downx);font-size:.85rem;padding:8px 4px;cursor:pointer}
+
+  .empty{text-align:center;color:var(--muted);padding:22px 10px;font-size:.9rem}
+  .empty b{color:var(--text)}
+  .link-danger{display:block;margin:8px auto 0;background:none;border:0;color:var(--downx);font-size:.78rem;padding:10px;cursor:pointer;opacity:.8}
+
+  /* Menú inferior */
+  .nav{
+    position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--nav);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);
+  }
+  .nav-inner{max-width:640px;margin:0 auto;height:66px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center}
+  .tab{
+    background:none;border:0;height:100%;color:var(--muted);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    font-size:.7rem;font-weight:600;cursor:pointer;
+  }
+  .ti{display:grid;place-items:center;width:54px;height:30px;border-radius:999px;transition:background .2s}
+  .tab svg{width:22px;height:22px}
+  .tab.active{color:var(--text)}
+  .tab.active .ti{background:var(--chip);color:var(--chipx)}
+  .fab-slot{position:relative;height:100%}
+  .fab{
+    position:absolute;left:50%;top:-30px;transform:translateX(-50%);
+    width:66px;height:66px;border-radius:50%;border:5px solid var(--bg);
+    background:linear-gradient(145deg,var(--blue-l),var(--blue));color:var(--onacc);cursor:pointer;
+    display:grid;place-items:center;padding:0;box-shadow:0 8px 22px rgba(0,0,0,.35);
+  }
+  .fab:active{transform:translateX(-50%) scale(.93)}
+  .fab svg{width:28px;height:28px}
+  .btn-clear{display:block;width:100%;margin-top:14px;padding:13px;border-radius:14px;border:1px solid var(--downx);background:none;color:var(--downx);font-weight:600;font-size:.9rem;cursor:pointer}
+  .modal{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.55)}
+  .sheet{width:100%;max-width:380px;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+  .sheet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .x{border:0;background:var(--chip);color:var(--chipx);width:34px;height:34px;border-radius:50%;font-size:1.3rem;line-height:1;cursor:pointer}
+  .set-name{font-size:.95rem;font-weight:700;margin-bottom:10px}
+  .swatches{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .sw{background:none;border:2px solid transparent;border-radius:14px;padding:8px 2px 6px;color:var(--muted);font-size:.7rem;font-weight:600;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px}
+  .sw i{width:34px;height:34px;border-radius:50%;border:1px solid rgba(128,128,128,.45)}
+  .sw.on{border-color:var(--blue-l);color:var(--text)}
+  .day-exp{font-size:.8rem;font-weight:600;color:var(--downx);margin-top:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top"><h1>Mis Ganancias</h1></div>
+
+  <!-- ===== INICIO ===== -->
+  <section id="viewToday">
+    <div class="grand">
+      <div class="label">Total ganado</div>
+      <div class="grand-amt" id="grandMoney">$0.00</div>
+      <div class="grand-sub" id="grandSub"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Ganancia por día</h2>
+        <button class="chip" id="tblBtn" type="button">Ver tabla</button>
+      </div>
+      <div class="seg" id="seg">
+        <button type="button" class="on" data-m="money">Ganancia</button>
+        <button type="button" data-m="items">Objetos</button>
+      </div>
+      <div class="chart-wrap" id="chart"></div>
+      <div id="tbl" hidden></div>
+      <div class="legend"><span class="u">verde: subió</span> · <span class="d">rojo: bajó</span> · <span class="f">● primer día</span></div>
+    </div>
+
+
+    <hr class="sep">
+
+    <div class="date-row">
+      <div class="dtitle" id="dateTitle"></div>
+      <div class="date-ctrl">
+        <button class="chip" id="backToday" type="button" hidden>Hoy</button>
+        <input type="date" id="datePicker" aria-label="Elegir día">
+      </div>
+    </div>
+
+    <div class="daytotal">
+      <div>
+        <div class="label">Total del día</div>
+        <div class="day-amt" id="dayMoney">$0.00</div>
+      </div>
+      <div class="day-right">
+        <div class="day-items" id="dayItems">0 objetos</div>
+        <div class="day-exp" id="dayExp" hidden></div>
+        <span class="pill flat" id="dayTrend" hidden></span>
+      </div>
+    </div>
+
+    <div id="list"></div>
+  </section>
+
+  <!-- ===== HISTORIAL ===== -->
+  <section id="viewHist" hidden>
+    <h1>Historial</h1>
+    <div class="sub">Toca un día para abrirlo y editarlo.</div>
+    <div id="histList"></div>
+    <button class="btn-clear" id="clearHist" type="button" hidden>Borrar historial</button>
+  </section>
+
+  <!-- ===== GASTOS ===== -->
+  <section id="viewExp" hidden>
+    <h1>Gastos</h1>
+    <div class="sub">Lo que gastes se descuenta del día y del total ganado.</div>
+    <div class="date-row">
+      <div class="dtitle" id="expTitle"></div>
+      <input type="date" id="expDate" aria-label="Elegir día">
+    </div>
+    <div class="card">
+      <div class="label">Gastado en el día</div>
+      <div class="day-amt" id="expTotal">$0.00</div>
+    </div>
+    <div class="form">
+      <input type="text" id="expName" placeholder="Descripción (opcional)">
+      <div class="grid2" style="align-items:end">
+        <div>
+          <label for="expAmt">Gastado ($)</label>
+          <input type="number" id="expAmt" inputmode="decimal" min="0" step="any" placeholder="0.00">
+        </div>
+        <button class="btn-done" id="expAdd" type="button">Agregar</button>
+      </div>
+    </div>
+    <div id="expList"></div>
+  </section>
+
+</div>
+
+<!-- ===== MENÚ INFERIOR ===== -->
+<nav class="nav">
+  <div class="nav-inner">
+    <button class="tab active" data-view="today" type="button">
+      <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></span>
+      Inicio
+    </button>
+    <button class="tab" data-view="history" type="button">
+      <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+      Historial
+    </button>
+    <div class="fab-slot">
+      <button class="fab" id="fab" type="button" aria-label="Crear nueva ganancia" title="Crear nueva ganancia">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+    </div>
+    <button class="tab" data-view="expenses" type="button">
+      <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/></svg></span>
+      Gastos
+    </button>
+    <button class="tab" id="gear" type="button" aria-haspopup="dialog">
+      <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+      Ajustes
+    </button>
+  </div>
+</nav>
+
+<div class="modal" id="settings" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="setTitle">
+    <div class="sheet-head">
+      <h2 id="setTitle">Configuración</h2>
+      <button class="x" id="setClose" type="button" aria-label="Cerrar">×</button>
+    </div>
+    <div class="set-name">Tema</div>
+    <div class="swatches">
+      <button class="sw" type="button" data-t="azul"><i style="background:#1d5fe0"></i>Azul</button>
+      <button class="sw" type="button" data-t="negro"><i style="background:#0b0b0d"></i>Negro</button>
+      <button class="sw" type="button" data-t="rojo"><i style="background:#e5303f"></i>Rojo</button>
+      <button class="sw" type="button" data-t="verde"><i style="background:#2fcf75"></i>Verde</button>
+      <button class="sw" type="button" data-t="amarillo"><i style="background:#ffd93d"></i>Amarillo</button>
+      <button class="sw" type="button" data-t="blanco"><i style="background:#fff"></i>Blanco</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var KEY = 'ganancias_dia_v1';
+  var all = {};
+  try { all = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { all = {}; }
+
+  var EKEY = 'gastos_dia_v1';
+  var exps = {};
+  try { exps = JSON.parse(localStorage.getItem(EKEY)) || {}; } catch(e) { exps = {}; }
+  function expList(d){ return exps[d] || []; }
+  function spentFor(d){ var t = 0; expList(d).forEach(function(x){ t += num(x.money); }); return t; }
+  function saveExp(){ try { localStorage.setItem(EKEY, JSON.stringify(exps)); } catch(e) {} }
+
+  var C_UP = '#34d27b', C_DOWN = '#ff5c6c', C_FLAT = '#dbe7ff';
+  var view = 'today';
+  var editingId = null;
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function todayStr(){
+    var d = new Date();
+    return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  }
+  function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+  function num(v){ var n = parseFloat(v); return isNaN(n) ? 0 : n; }
+  function fmtMoney(n){
+    return (n < 0 ? '−' : '') + '$' + Math.abs(n).toLocaleString('es', {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtNum(n){ return n.toLocaleString('es', {maximumFractionDigits:2}); }
+  function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+  function parseDay(d){ return new Date(d + 'T00:00:00'); }
+  function byId(id){ return document.getElementById(id); }
+  function plural(n, one, many){ return n === 1 ? one : many; }
+  // Un código como [#ff0000] en la descripción da color al texto y no se muestra.
+  function parseTag(name){
+    var color = '';
+    var text = String(name || '').replace(/\[#([0-9a-fA-F]{3,8})\]/g, function(m, h){
+      if([3,4,6,8].indexOf(h.length) < 0) return m;
+      if(!color) color = '#' + h;
+      return '';
+    }).replace(/\s{2,}/g, ' ').trim();
+    return {text: text, color: color};
+  }
+
+  var currentDate = todayStr();
+  var entries = all[currentDate] || [];
+
+  var $viewToday = byId('viewToday');
+  var $viewHist = byId('viewHist');
+  var $viewExp = byId('viewExp');
+  var $list = byId('list');
+  var $date = byId('datePicker');
+  var $back = byId('backToday');
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab[data-view]'));
+
+  function save(){
+    all[currentDate] = entries;
+    try { localStorage.setItem(KEY, JSON.stringify(all)); } catch(e) {}
+  }
+
+  /* ---------- Datos por día ---------- */
+  function listFor(d){ return d === currentDate ? entries : (all[d] || []); }
+
+  function totalsFor(d){
+    var m = 0, it = 0, sp = spentFor(d);
+    listFor(d).forEach(function(e){ m += num(e.money); it += num(e.items); });
+    return {money: m - sp, items: it, spent: sp};
+  }
+
+  // Una ganancia en blanco (recién creada, sin datos) no cuenta como día registrado.
+  function dataCount(list){
+    var n = 0;
+    (list || []).forEach(function(e){ if(!isBlank(e)) n++; });
+    return n;
+  }
+
+  function recordedDays(){
+    var set = {};
+    Object.keys(all).forEach(function(d){
+      if(d !== currentDate && dataCount(all[d]) > 0) set[d] = 1;
+    });
+    Object.keys(exps).forEach(function(d){ if(spentFor(d) > 0) set[d] = 1; });
+    if(dataCount(entries) > 0) set[currentDate] = 1;
+    return Object.keys(set).sort();
+  }
+
+  function trend(cur, prev, fmt){
+    if(prev == null) return {dir:'first', cls:'flat', arrow:'', text:''};
+    var c = Math.round(cur*100), p = Math.round(prev*100);
+    var diff = Math.abs(c - p) / 100;
+    if(c > p) return {dir:'up', cls:'up', arrow:'↑', text:'+' + fmt(diff)};
+    if(c < p) return {dir:'down', cls:'down', arrow:'↓', text:'−' + fmt(diff)};
+    return {dir:'same', cls:'flat', arrow:'=', text:'Igual'};
+  }
+
+  function buildRows(){
+    var days = recordedDays();
+    return days.map(function(d, i){
+      var t = totalsFor(d);
+      var prev = i > 0 ? totalsFor(days[i-1]) : null;
+      return {
+        date: d, money: t.money, items: t.items, spent: t.spent, count: dataCount(listFor(d)),
+        tm: trend(t.money, prev ? prev.money : null, fmtMoney)
+      };
+    });
+  }
+
+  function setPill(node, tr, suffix, show){
+    if(!show || tr.dir === 'first'){ node.hidden = true; return; }
+    node.hidden = false;
+    node.className = 'pill ' + tr.cls;
+    node.textContent = tr.dir === 'same' ? '= Igual' : tr.arrow + ' ' + tr.text + (suffix ? ' ' + suffix : '');
+  }
+
+  /* ---------- Totales ---------- */
+  function renderDayTotal(){
+    var t = totalsFor(currentDate);
+    byId('dayMoney').textContent = fmtMoney(t.money);
+    byId('dayItems').textContent = fmtNum(t.items) + plural(t.items, ' objeto', ' objetos');
+    var before = recordedDays().filter(function(d){ return d < currentDate; });
+    var prev = before.length ? totalsFor(before[before.length-1]) : null;
+    var de = byId('dayExp');
+    de.hidden = !(t.spent > 0);
+    de.textContent = 'Gastos −' + fmtMoney(t.spent);
+    setPill(byId('dayTrend'), trend(t.money, prev ? prev.money : null, fmtMoney), 'vs anterior', dataCount(entries) > 0 || t.spent > 0);
+  }
+
+  function renderGrand(rows){
+    var m = 0, it = 0, sp = 0;
+    rows.forEach(function(r){ m += r.money; it += r.items; sp += r.spent; });
+    byId('grandMoney').textContent = fmtMoney(m);
+    byId('grandSub').textContent = fmtNum(it) + plural(it, ' objeto vendido', ' objetos vendidos') +
+      ' · ' + rows.length + plural(rows.length, ' día', ' días') + (sp > 0 ? ' · gastos ' + fmtMoney(sp) : '');
+  }
+
+  /* ---------- Gráfica de todos los días ---------- */
+  var NS = 'http://www.w3.org/2000/svg';
+  function sv(name, attrs, parent){
+    var n = document.createElementNS(NS, name);
+    Object.keys(attrs).forEach(function(k){ n.setAttribute(k, attrs[k]); });
+    if(parent) parent.appendChild(n);
+    return n;
+  }
+  function shortDate(d){ return d.slice(8,10) + '/' + d.slice(5,7); }
+  function colorFor(tr){ return tr.dir === 'up' ? C_UP : (tr.dir === 'down' ? C_DOWN : C_FLAT); }
+
+  var metric = 'money';
+  function cv(k){ return getComputedStyle(document.documentElement).getPropertyValue(k).trim(); }
+
+  function renderChart(rows){
+    var host = byId('chart');
+    host.innerHTML = '';
+    if(!rows.length){
+      var m = document.createElement('div');
+      m.className = 'chart-msg';
+      m.textContent = 'Todavía no hay datos para graficar.';
+      host.appendChild(m);
+      return;
+    }
+    var cols = {up:cv('--up'), down:cv('--down'), same:cv('--flat'), first:cv('--blue-l')};
+    var vals = rows.map(function(r){ return metric === 'money' ? r.money : r.items; });
+    var H = 210, padL = 14, padR = 14, padT = 28, padB = 36, slot = 46, minW = 320;
+    var n = rows.length;
+    var W = Math.max(minW, padL + padR + n * slot);
+    var slotW = (W - padL - padR) / n, bw = Math.min(28, slotW * .62);
+    var ph = H - padT - padB;
+    var hi = Math.max.apply(null, vals.concat([1])) * 1.08;
+    var lo = Math.min.apply(null, vals.concat([0])) * 1.08;
+    function Y(v){ return padT + ph * (hi - v) / (hi - lo); }
+    var zero = Y(0);
+
+    var svg = sv('svg', {viewBox:'0 0 '+W+' '+H, 'class':'chart', role:'img', 'aria-label':'Ganancia por día'}, null);
+    svg.style.width = W > minW ? W + 'px' : '100%';
+    sv('line', {x1:padL-6, x2:W-padR+6, y1:zero, y2:zero, stroke:cv('--axis'), 'stroke-width':1}, svg);
+
+    rows.forEach(function(r, i){
+      var tr = trend(vals[i], i > 0 ? vals[i-1] : null, fmtNum);
+      var cx = padL + slotW * (i + .5), neg = vals[i] < 0;
+      var h = Math.max(4, Math.abs(zero - Y(vals[i])));
+      sv('rect', {x:cx - bw/2, y:neg ? zero : zero - h, width:bw, height:h, rx:6, fill:cols[tr.dir]}, svg);
+      var v = sv('text', {x:cx, y:neg ? zero + h + 13 : zero - h - 7, 'text-anchor':'middle', 'font-size':10, 'font-weight':700, fill:cv('--text')}, svg);
+      v.textContent = (neg ? '−' : '') + fmtNum(Math.abs(vals[i]));
+      var t = sv('text', {x:cx, y:H - 8, 'text-anchor':'middle', 'font-size':10, fill:cv('--muted')}, svg);
+      t.textContent = shortDate(r.date);
+    });
+
+    host.appendChild(svg);
+    host.scrollLeft = host.scrollWidth;
+  }
+
+  function renderTable(rows){
+    var host = byId('tbl');
+    if(!rows.length){ host.innerHTML = '<div class="chart-msg">Todavía no hay datos.</div>'; return; }
+    var h = '<table class="tbl"><tr><th>Fecha</th><th class="r">Ganancia</th><th class="r">Gastos</th><th class="r">Objetos</th></tr>';
+    rows.slice().reverse().forEach(function(r){
+      h += '<tr><td>' + shortDate(r.date) + '</td><td class="r">' + fmtMoney(r.money) + '</td><td class="r">' +
+        (r.spent > 0 ? fmtMoney(r.spent) : '—') + '</td><td class="r">' + fmtNum(r.items) + '</td></tr>';
+    });
+    host.innerHTML = h + '</table>';
+  }
+
+  /* ---------- Historial de días ---------- */
+  function renderHistoryList(rows){
+    byId('clearHist').hidden = !rows.length;
+    var host = byId('histList');
+    host.innerHTML = '';
+    if(!rows.length){
+      var box = document.createElement('div');
+      box.className = 'empty';
+      box.textContent = 'Todavía no hay días registrados.';
+      host.appendChild(box);
+      return;
+    }
+    var today = todayStr();
+    rows.slice().reverse().forEach(function(r){
+      var dt = parseDay(r.date);
+      var row = document.createElement('button');
+      row.type = 'button'; row.className = 'ent';
+
+      var main = document.createElement('div'); main.className = 'ent-main';
+      var st = document.createElement('strong');
+      st.textContent = cap(dt.toLocaleDateString('es', {weekday:'long', day:'numeric', month:'short'}).replace('.', '')) +
+        (r.date === today ? ' · Hoy' : '');
+      var sm = document.createElement('small');
+      sm.textContent = r.count + plural(r.count, ' ganancia', ' ganancias') + ' · ' + fmtNum(r.items) + ' obj.' + (r.spent > 0 ? ' · gastos ' + fmtMoney(r.spent) : '');
+      main.appendChild(st); main.appendChild(sm);
+
+      var right = document.createElement('div'); right.className = 'ent-right';
+      var amt = document.createElement('span'); amt.className = 'ent-amt'; amt.textContent = fmtMoney(r.money);
+      var pl = document.createElement('span');
+      if(r.tm.dir === 'first'){
+        pl.className = 'pill flat'; pl.textContent = 'Primer día';
+      } else {
+        pl.className = 'pill ' + r.tm.cls;
+        pl.textContent = r.tm.dir === 'same' ? '= Igual' : r.tm.arrow + ' ' + r.tm.text;
+      }
+      right.appendChild(amt); right.appendChild(pl);
+
+      row.appendChild(main); row.appendChild(right);
+      row.addEventListener('click', function(){ openDay(r.date); });
+      host.appendChild(row);
+    });
+  }
+
+  /* ---------- Día seleccionado ---------- */
+  function renderDateHeader(){
+    var dt = parseDay(currentDate);
+    var isToday = currentDate === todayStr();
+    var rest = dt.toLocaleDateString('es', {day:'numeric', month:'long'});
+    byId('dateTitle').textContent = isToday ? 'Hoy · ' + rest : cap(dt.toLocaleDateString('es', {weekday:'long'})) + ' · ' + rest;
+    $back.hidden = isToday;
+    $date.value = currentDate;
+    byId('expTitle').textContent = byId('dateTitle').textContent;
+    byId('expDate').value = currentDate;
+  }
+
+  function isBlank(e){
+    return !(e.name && e.name.trim()) &&
+      (e.money === '' || e.money == null) && (e.items === '' || e.items == null);
+  }
+
+  // Cierra el formulario abierto; si quedó vacío, descarta esa ganancia.
+  function closeEditing(){
+    if(editingId == null) return;
+    var keep = [];
+    entries.forEach(function(e){
+      if(!(e.id === editingId && isBlank(e))) keep.push(e);
+    });
+    entries = keep;
+    editingId = null;
+  }
+
+  function finishEditing(){
+    closeEditing();
+    save(); renderAll();
+  }
+
+  function startEditing(id){
+    closeEditing();
+    editingId = id;
+    save(); renderAll();
+    focusForm();
+  }
+
+  function focusForm(){
+    var f = $list.querySelector('.form');
+    if(!f) return;
+    f.scrollIntoView({behavior:'smooth', block:'center'});
+    var inp = f.querySelector('input[type=number]');
+    if(inp) inp.focus({preventScroll:true});
+  }
+
+  // Ganancia ya creada: se muestra como un rectángulo resumido.
+  function buildCompact(e, i){
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'ent';
+    var main = document.createElement('div'); main.className = 'ent-main';
+    var st = document.createElement('strong');
+    var tg = parseTag(e.name);
+    st.textContent = tg.text ? tg.text : 'Ganancia ' + (i + 1);
+    if(tg.color) st.style.color = tg.color;
+    var sm = document.createElement('small');
+    sm.textContent = fmtNum(num(e.items)) + plural(num(e.items), ' objeto', ' objetos');
+    main.appendChild(st); main.appendChild(sm);
+    var right = document.createElement('div'); right.className = 'ent-right';
+    var amt = document.createElement('span'); amt.className = 'ent-amt'; amt.textContent = fmtMoney(num(e.money));
+    right.appendChild(amt);
+    b.appendChild(main); b.appendChild(right);
+    b.addEventListener('click', function(){ startEditing(e.id); });
+    return b;
+  }
+
+  // Ganancia que se está creando o editando: formulario abierto.
+  function buildForm(e){
+    var card = document.createElement('div');
+    card.className = 'form';
+
+    function onEnter(ev){ if(ev.key === 'Enter'){ ev.preventDefault(); finishEditing(); } }
+
+    var ni = document.createElement('input');
+    ni.type = 'text'; ni.placeholder = 'Descripción (opcional)';
+    ni.value = e.name || '';
+    ni.addEventListener('input', function(){ e.name = ni.value; save(); });
+    ni.addEventListener('keydown', onEnter);
+
+    var grid = document.createElement('div'); grid.className = 'grid2';
+
+    var g1 = document.createElement('div');
+    var l1 = document.createElement('label'); l1.textContent = 'Recaudado ($)';
+    var i1 = document.createElement('input'); i1.type = 'number'; i1.inputMode = 'decimal';
+    i1.min = '0'; i1.step = 'any'; i1.placeholder = '0.00';
+    i1.value = (e.money === '' || e.money == null) ? '' : e.money;
+    i1.addEventListener('input', function(){
+      e.money = i1.value === '' ? '' : num(i1.value);
+      save(); refreshStats();
+    });
+    i1.addEventListener('keydown', onEnter);
+    g1.appendChild(l1); g1.appendChild(i1);
+
+    var g2 = document.createElement('div');
+    var l2 = document.createElement('label'); l2.textContent = 'Objetos vendidos';
+    var i2 = document.createElement('input'); i2.type = 'number'; i2.inputMode = 'numeric';
+    i2.min = '0'; i2.step = '1'; i2.placeholder = '0';
+    i2.value = (e.items === '' || e.items == null) ? '' : e.items;
+    i2.addEventListener('input', function(){
+      e.items = i2.value === '' ? '' : num(i2.value);
+      save(); refreshStats();
+    });
+    i2.addEventListener('keydown', onEnter);
+    g2.appendChild(l2); g2.appendChild(i2);
+
+    grid.appendChild(g1); grid.appendChild(g2);
+
+    var actions = document.createElement('div'); actions.className = 'form-actions';
+    var del = document.createElement('button');
+    del.type = 'button'; del.className = 'btn-del'; del.textContent = 'Eliminar';
+    del.addEventListener('click', function(){
+      entries = entries.filter(function(x){ return x.id !== e.id; });
+      editingId = null;
+      save(); renderAll();
+    });
+    var done = document.createElement('button');
+    done.type = 'button'; done.className = 'btn-done'; done.textContent = 'Listo';
+    done.addEventListener('click', finishEditing);
+    actions.appendChild(del); actions.appendChild(done);
+
+    card.appendChild(ni); card.appendChild(grid); card.appendChild(actions);
+    return card;
+  }
+
+  function renderEntries(){
+    $list.innerHTML = '';
+    if(!entries.length){
+      var box = document.createElement('div'); box.className = 'empty';
+      box.innerHTML = 'Aún no hay ganancias en este día.<br>Toca el botón <b>+</b> para crear una.';
+      $list.appendChild(box);
+      return;
+    }
+    entries.forEach(function(e, i){
+      $list.appendChild(e.id === editingId ? buildForm(e) : buildCompact(e, i));
+    });
+    if(editingId == null){
+      var reset = document.createElement('button');
+      reset.type = 'button'; reset.className = 'link-danger'; reset.textContent = 'Borrar todo el día';
+      reset.addEventListener('click', function(){
+        if(confirm('¿Borrar todas las ganancias de este día?')){
+          entries = []; editingId = null; save(); renderAll();
+        }
+      });
+      $list.appendChild(reset);
+    }
+  }
+
+  function refreshStats(){
+    var rows = buildRows();
+    renderDayTotal();
+    renderGrand(rows);
+    renderChart(rows);
+    renderTable(rows);
+    renderHistoryList(rows);
+  }
+
+  function renderAll(){
+    renderDateHeader();
+    renderEntries();
+    renderExpenses();
+    refreshStats();
+  }
+
+  /* ---------- Navegación ---------- */
+  function showView(name){
+    if(name !== 'today' && editingId != null){
+      closeEditing(); save(); renderAll();
+    }
+    view = name;
+    $viewToday.hidden = name !== 'today';
+    $viewHist.hidden = name !== 'history';
+    $viewExp.hidden = name !== 'expenses';
+    tabs.forEach(function(t){
+      t.classList.toggle('active', t.getAttribute('data-view') === name);
+    });
+    window.scrollTo(0, 0);
+  }
+
+  function openDay(d, v){
+    closeEditing();
+    save();
+    currentDate = d;
+    entries = all[d] || [];
+    showView(v || 'today');
+    renderAll();
+  }
+
+  function addEntry(){
+    if(view !== 'today') showView('today');
+    closeEditing();
+    var ne = {id: uid(), name: '', money: '', items: ''};
+    entries.push(ne);
+    editingId = ne.id;
+    save(); renderAll();
+    focusForm();
+  }
+
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){ showView(t.getAttribute('data-view')); });
+  });
+  byId('fab').addEventListener('click', addEntry);
+  $back.addEventListener('click', function(){ openDay(todayStr()); });
+  $date.addEventListener('change', function(){
+    if($date.value) openDay($date.value);
+  });
+
+  /* ---------- Gráfica: métrica, tabla y tema ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll('#seg button'), function(b){
+    b.addEventListener('click', function(){
+      metric = b.getAttribute('data-m');
+      Array.prototype.forEach.call(document.querySelectorAll('#seg button'), function(x){ x.classList.toggle('on', x === b); });
+      renderChart(buildRows());
+    });
+  });
+  byId('tblBtn').addEventListener('click', function(){
+    var showT = byId('tbl').hidden;
+    byId('tbl').hidden = !showT;
+    byId('chart').hidden = showT;
+    byId('tblBtn').textContent = showT ? 'Ver gráfica' : 'Ver tabla';
+    if(!showT) byId('chart').scrollLeft = byId('chart').scrollWidth;
+  });
+
+  var THEME_KEY = 'ganancias_tema';
+  var THEME_BG = {azul:'#071c4f', negro:'#0b0b0d', rojo:'#4a0a12', verde:'#084a28', amarillo:'#ffe97a', blanco:'#eef3ff'};
+  var theme = 'azul';
+  try {
+    var stored = localStorage.getItem(THEME_KEY);
+    if(THEME_BG[stored]) theme = stored; else if(stored === 'light') theme = 'blanco'; else if(stored === 'dark') theme = 'azul';
+  } catch(e) {}
+  function applyTheme(t){
+    theme = t;
+    document.documentElement.setAttribute('data-theme', t);
+    var mt = document.querySelector('meta[name=theme-color]');
+    if(mt) mt.setAttribute('content', THEME_BG[t]);
+    Array.prototype.forEach.call(document.querySelectorAll('.sw'), function(b){
+      b.classList.toggle('on', b.getAttribute('data-t') === t);
+    });
+  }
+  applyTheme(theme);
+
+  var $set = byId('settings');
+  function closeSettings(){ $set.hidden = true; }
+  byId('gear').addEventListener('click', function(){ $set.hidden = false; });
+  byId('setClose').addEventListener('click', closeSettings);
+  $set.addEventListener('click', function(e){ if(e.target === $set) closeSettings(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeSettings(); });
+  Array.prototype.forEach.call(document.querySelectorAll('.sw'), function(b){
+    b.addEventListener('click', function(){
+      applyTheme(b.getAttribute('data-t'));
+      try { localStorage.setItem(THEME_KEY, theme); } catch(e) {}
+      renderChart(buildRows());
+    });
+  });
+
+  byId('clearHist').addEventListener('click', function(){
+    if(!confirm('¿Borrar todo el historial? Se eliminarán todos los días y ganancias registradas. No se puede deshacer.')) return;
+    all = {}; entries = []; editingId = null; exps = {};
+    save(); saveExp(); renderAll();
+  });
+
+  /* ---------- Gastos ---------- */
+  function renderExpenses(){
+    var l = expList(currentDate), host = byId('expList');
+    host.innerHTML = '';
+    byId('expTotal').textContent = fmtMoney(spentFor(currentDate));
+    if(!l.length){
+      var box = document.createElement('div'); box.className = 'empty';
+      box.textContent = 'Aún no hay gastos en este día.';
+      host.appendChild(box);
+      return;
+    }
+    l.forEach(function(x, i){
+      var row = document.createElement('div'); row.className = 'ent'; row.style.cursor = 'default';
+      var main = document.createElement('div'); main.className = 'ent-main';
+      var st = document.createElement('strong');
+      var tg = parseTag(x.name);
+      st.textContent = tg.text ? tg.text : 'Gasto ' + (i + 1);
+      if(tg.color) st.style.color = tg.color;
+      main.appendChild(st);
+      var right = document.createElement('div'); right.className = 'ent-right';
+      var amt = document.createElement('span'); amt.className = 'ent-amt'; amt.style.color = 'var(--downx)';
+      amt.textContent = '−' + fmtMoney(num(x.money));
+      var del = document.createElement('button'); del.type = 'button'; del.className = 'btn-del'; del.textContent = 'Eliminar';
+      del.addEventListener('click', function(){
+        exps[currentDate] = expList(currentDate).filter(function(y){ return y.id !== x.id; });
+        saveExp(); renderAll();
+      });
+      right.appendChild(amt); right.appendChild(del);
+      row.appendChild(main); row.appendChild(right);
+      host.appendChild(row);
+    });
+  }
+
+  function addExpense(){
+    var a = num(byId('expAmt').value);
+    if(a <= 0){ byId('expAmt').focus(); return; }
+    if(!exps[currentDate]) exps[currentDate] = [];
+    exps[currentDate].push({id: uid(), name: byId('expName').value.trim(), money: a});
+    byId('expName').value = ''; byId('expAmt').value = '';
+    saveExp(); renderAll();
+    byId('expAmt').focus();
+  }
+  byId('expAdd').addEventListener('click', addExpense);
+  ['expName','expAmt'].forEach(function(id){
+    byId(id).addEventListener('keydown', function(ev){ if(ev.key === 'Enter'){ ev.preventDefault(); addExpense(); } });
+  });
+  byId('expDate').addEventListener('change', function(){ if(this.value) openDay(this.value, 'expenses'); });
+
+  renderAll();
+})();
+</script>
+</body>
+</html>
